@@ -1,9 +1,5 @@
-#Readme
+# Readme
 
+Read & Follow instructions on how to setup the backend
 
-##Introduction
-
-Hello peeps
-
-##This an introduction to the readme
-
+Fedt ikk
