@@ -24,7 +24,8 @@ module.exports = {
       'error',
       {
         endOfLine: 'auto',
-        singleQuote: true
+        singleQuote: true,
+        printWidth: 50
       }
     ]
   }
