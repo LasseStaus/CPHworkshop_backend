@@ -10,7 +10,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Users {
+model User {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -21,6 +21,7 @@ model Users {
   lastName  String?
 
   Bookings Booking[]
+  @@map("users")
 }
 
 model Booking {
@@ -31,6 +32,8 @@ model Booking {
 
   title  String
   userId Int
-  user   Users  @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
 
+
+  @@map("bookings")
 }
