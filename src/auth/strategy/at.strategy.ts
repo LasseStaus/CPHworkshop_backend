@@ -3,8 +3,14 @@ import { ConfigService } from '@nestjs/config'
 import { PassportStrategy } from '@nestjs/passport'
 import { ExtractJwt, Strategy } from 'passport-jwt'
 import { PrismaService } from 'src/prisma/prisma.service'
-@Injectable()
-export class JwtStrategy extends PassportStrategy(
+
+type JwtPayload = {
+  sub: string
+  email: string
+}
+
+@Injectable() // provider
+export class ATStrategy extends PassportStrategy(
   Strategy,
   'jwt_access_token' //this is the key name, defaults to "jwt" if nothing is written
 ) {
@@ -13,22 +19,28 @@ export class JwtStrategy extends PassportStrategy(
     private prismaService: PrismaService
   ) {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      // passport jwt
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), // how to get the token, extraxt from headers
       ignoreExpiration: false,
-      secretOrKey: configService.get('JWT_SECRET')
+      secretOrKey: configService.get('JWT_AT_SECRET') // the secret password to sign the tokens
     })
   }
 
   //TODO Check video igen når han laver det her - hvorfor hedder den validate
 
-  async validate(payload: { sub: number; email: string }) {
+  validate(payload: JwtPayload) {
+    console.log('JWT', payload)
+    return payload
+  }
+
+  /*   async validate(payload: {
+    // payload from token
+    sub: number
+    email: string
+  }) {
     const user = await this.prismaService.user.findUnique({
       where: { id: payload.sub }
     })
     delete user.hash
-
-    console.log('JWT Strategy', { payload })
-
-    return 'finder en user'
-  }
+  } */
 }
