@@ -46,7 +46,7 @@ export class AuthService {
     }
   }
   ////OLD
-  async signin(dto: AuthDto, res: Response) {
+  async signin(dto: AuthDto) {
     console.log('BACKEDND')
     const user = await this.prismaService.user.findUnique({
       where: {

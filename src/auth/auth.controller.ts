@@ -31,11 +31,11 @@ export class AuthController {
   @Post('local/signin')
   login(
     @Req() req,
-    @Body() dto: AuthDto,
-    @Res({ passthrough: true }) res
+    @Body() dto: AuthDto
+    // @Res({ passthrough: true }) res
     //TODO CHANGE ANY
   ): Promise<any> {
-    return this.authService.signin(dto, res)
+    return this.authService.signin(dto)
   }
 
   @Post('logout')
