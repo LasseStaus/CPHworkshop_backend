@@ -4,7 +4,9 @@ import {
   HttpCode,
   HttpStatus,
   Post,
-  UseGuards,
+  Req,
+  Res,
+  UseGuards
 } from '@nestjs/common'
 import { AuthService } from './auth.service'
 import { GetUser, GetUserId, PublicPath } from './decorator'
@@ -14,7 +16,7 @@ import { Tokens } from './types'
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService) {}
 
   @PublicPath()
   @Post('local/signup')
@@ -27,8 +29,13 @@ export class AuthController {
   // needs meta data to donts use AT guad
   @HttpCode(HttpStatus.OK)
   @Post('local/signin')
-  login(@Body() dto: AuthDto): Promise<Tokens> {
-    return this.authService.signin(dto)
+  login(
+    @Req() req,
+    @Body() dto: AuthDto,
+    @Res({ passthrough: true }) res
+    //TODO CHANGE ANY
+  ): Promise<any> {
+    return this.authService.signin(dto, res)
   }
 
   @Post('logout')
@@ -43,7 +50,8 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   refreshTokens(
     @GetUserId() userId: number,
-    @GetUser('refreshToken') refreshToken: string) {
+    @GetUser('refreshToken') refreshToken: string
+  ) {
     return this.authService.refreshTokens(userId, refreshToken)
   }
 }

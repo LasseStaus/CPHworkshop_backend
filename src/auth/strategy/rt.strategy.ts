@@ -1,44 +1,28 @@
-import { Injectable } from '@nestjs/common'
+import { ConsoleLogger, ForbiddenException, Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { PassportStrategy } from '@nestjs/passport'
-import {
-    ExtractJwt,
-    Strategy
-} from 'passport-jwt'
+import { ExtractJwt, Strategy } from 'passport-jwt'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { Request } from 'express'
 
 @Injectable()
 export class RTStrategy extends PassportStrategy(
-    Strategy,
-    'jwt_refresh_token' //this is the key name, defaults to "jwt" if nothing is written
+  Strategy,
+  'jwt_refresh_token'
 ) {
-    constructor(
-        configService: ConfigService,
-        private prismaService: PrismaService
-    ) {
-        super({
-            jwtFromRequest:
-                ExtractJwt.fromAuthHeaderAsBearerToken(), // how to get the token, extraxt from headers
-            ignoreExpiration: false,
-            secretOrKey: configService.get('JWT_RT_SECRET'), // the secret password to sign the tokens
-            passReqToCallBack: true,
-        })
+  constructor(config: ConfigService) {
+    super({
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      secretOrKey: config.get<string>('JWT_RT_SECRET'),
+      passReqToCallback: true
+    })
+  }
+  validate(req: Request, payload: any) {
+    const refreshToken = req?.get('authorization')?.replace('Bearer', '').trim()
+    if (!refreshToken) throw new ForbiddenException('Refresh token malformed')
+    return {
+      ...payload,
+      refreshToken
     }
-
-    //TODO Check video igen når han laver det her - hvorfor hedder den validate
-
-    async validate(req: Request, payload: { // payload from token
-        sub: number
-        email: string
-    }) {
-
-        const refreshToken = req.get('authorization').replace('Bearer', '').trim()
-
-        return {
-            ...payload,
-            refreshToken
-        }
-
-    }
+  }
 }

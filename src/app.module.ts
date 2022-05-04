@@ -15,11 +15,12 @@ import { AtGuard } from './auth/guard'
     UserModule,
     PrismaModule
   ],
-  providers: [ // automatically detect
+  providers: [
+    // automatically detect
     {
       provide: APP_GUARD,
-      useClass: AtGuard,
+      useClass: AtGuard
     }
   ]
 })
-export class AppModule { }
+export class AppModule {}

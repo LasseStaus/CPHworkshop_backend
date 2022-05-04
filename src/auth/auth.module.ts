@@ -9,5 +9,4 @@ import { ATStrategy, RTStrategy } from './strategy'
   controllers: [AuthController],
   providers: [AuthService, ATStrategy, RTStrategy]
 })
-export class AuthModule { }
-
+export class AuthModule {}
