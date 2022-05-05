@@ -1,9 +1,9 @@
-import { ConsoleLogger, ForbiddenException, Injectable } from '@nestjs/common'
+import { ForbiddenException, Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { PassportStrategy } from '@nestjs/passport'
-import { ExtractJwt, Strategy } from 'passport-jwt'
-import { PrismaService } from 'src/prisma/prisma.service'
 import { Request } from 'express'
+import { ExtractJwt, Strategy } from 'passport-jwt'
+import { refreshToken } from '../types'
 
 @Injectable()
 export class RTStrategy extends PassportStrategy(
@@ -17,7 +17,9 @@ export class RTStrategy extends PassportStrategy(
       passReqToCallback: true
     })
   }
-  validate(req: Request, payload: any) {
+  validate(req: Request, payload: refreshToken) {
+    console.log('BE - validate', payload)
+
     const refreshToken = req?.get('authorization')?.replace('Bearer', '').trim()
     if (!refreshToken) throw new ForbiddenException('Refresh token malformed')
     return {

@@ -1,16 +1,12 @@
-import { ForbiddenException, HttpStatus, Injectable, Res } from '@nestjs/common'
-import { User, Booking } from '@prisma/client'
-
+import { ForbiddenException, Injectable } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
+import { JwtService } from '@nestjs/jwt'
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime'
+import * as argon from 'argon2'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { LoginDto, SignupDto } from './dto'
-import * as argon from 'argon2'
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime'
-import { domainToASCII } from 'url'
-import { JwtService } from '@nestjs/jwt'
-import { ConfigService } from '@nestjs/config'
-import { Tokens } from './types'
-import { response, Response } from 'express'
 import { hashConfig } from './helpers/hashconfig'
+import { Tokens } from './types'
 
 @Injectable()
 export class AuthService {
@@ -42,34 +38,28 @@ export class AuthService {
     } catch (err) {
       if (err instanceof PrismaClientKnownRequestError) {
         if ((err.code = 'P2002')) {
-          throw new ForbiddenException('Credentials taken hej')
+          throw new ForbiddenException('BE - Credentials taken hej')
         }
-        console.log('Prisma Error', err)
+        console.log('BE log - Signup - Prisma Error', err)
       }
-      console.log(err)
+      console.log('BE log - Signup - Regular rerror', err)
     }
   }
   ////OLD
 
   async signin(dto: LoginDto) {
-    console.log('BACKEDND')
     const user = await this.prismaService.user.findUnique({
       where: {
         email: dto.email
       }
     })
 
-    console.log('BACKEDND')
-    console.log('BACKEDND')
-    console.log(user)
-    console.log(new Date())
-
-    if (!user) throw new ForbiddenException('Credentials Incorret')
+    if (!user) throw new ForbiddenException('BE - Credentials Incorret')
 
     const pwMatches = await argon.verify(user.hash, dto.password, {
       ...hashConfig
     })
-    if (!pwMatches) throw new ForbiddenException('credentials incorrect')
+    if (!pwMatches) throw new ForbiddenException('BE - credentials incorrect')
 
     const tokens = await this.signToken(user.id, user.email)
     await this.updateRtHash(user.id, tokens.refresh_token)
@@ -81,22 +71,24 @@ export class AuthService {
 
   async logout(userId: number) {
     // delete refresh hash
-    await this.prismaService.user.updateMany({
-      where: {
-        id: userId,
-        hashedRt: {
-          not: null
+    try {
+      await this.prismaService.user.updateMany({
+        where: {
+          id: userId,
+          hashedRt: {
+            not: null
+          }
+        },
+        data: {
+          hashedRt: null
         }
-      },
-      data: {
-        hashedRt: null
-      }
-    })
-    return { henrik: 'henrik' }
+      })
+      return { message: 'BE - Logout successfull' }
+    } catch (err) {
+      return { message: 'BE - Logout failed', error: err }
+    }
   }
   async refreshTokens(userId: number, rt: string) {
-    console.log('er i refresh')
-
     const user = await this.prismaService.user.findUnique({
       where: {
         id: userId
@@ -104,29 +96,33 @@ export class AuthService {
     })
 
     if (!user || !user.hashedRt)
-      throw new ForbiddenException('Acces Denied - First')
+      throw new ForbiddenException('BE - Acces Denied - First')
     // check all exepections throws
 
     const rtMathces = await argon.verify(user.hashedRt, rt, { ...hashConfig })
-    if (!rtMathces) throw new ForbiddenException('Acces denied - second')
+    if (!rtMathces) throw new ForbiddenException('BE -Acces denied - second')
 
     const tokens = await this.signToken(user.id, user.email)
     await this.updateRtHash(user.id, tokens.refresh_token)
 
-    console.log('backend refresh tokens', tokens)
     return tokens
   }
 
   async updateRtHash(userId: number, rt: string) {
     const hash = await argon.hash(rt, { ...hashConfig })
-    await this.prismaService.user.update({
-      where: {
-        id: userId
-      },
-      data: {
-        hashedRt: hash
-      }
-    })
+    try {
+      await this.prismaService.user.update({
+        where: {
+          id: userId
+        },
+        data: {
+          hashedRt: hash
+        }
+      })
+      return { message: 'BE - RT hash updated successfully' }
+    } catch (err) {
+      return { message: 'BE - RT hash update failed', error: err }
+    }
   }
 
   async signToken(

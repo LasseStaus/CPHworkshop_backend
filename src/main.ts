@@ -10,6 +10,7 @@ async function bootstrap() {
   app.use(cookieParser())
   app.useGlobalPipes(
     new ValidationPipe({
+      stopAtFirstError: true,
       whitelist: true
     })
   )
