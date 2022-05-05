@@ -4,14 +4,12 @@ import {
   HttpCode,
   HttpStatus,
   Post,
-  Req,
-  Res,
   UseGuards
 } from '@nestjs/common'
 import { AuthService } from './auth.service'
 import { GetUser, GetUserId, PublicPath } from './decorator'
 import { LoginDto, SignupDto } from './dto'
-import { AtGuard, RtGuard } from './guard'
+import { RtGuard } from './guard'
 import { Tokens } from './types'
 
 @Controller('auth')
@@ -29,12 +27,7 @@ export class AuthController {
   // needs meta data to donts use AT guad
   @HttpCode(HttpStatus.OK)
   @Post('local/signin')
-  login(
-    /*     @Req() req, */
-    @Body() dto: LoginDto
-    /*     @Res({ passthrough: true }) res */
-    //TODO CHANGE ANY
-  ): Promise<any> {
+  login(@Body() dto: LoginDto): Promise<Tokens> {
     return this.authService.signin(dto)
   }
 
@@ -52,7 +45,6 @@ export class AuthController {
     @GetUserId() userId: number,
     @GetUser('refreshToken') refreshToken: string
   ) {
-    console.log('er i refresh')
     return this.authService.refreshTokens(userId, refreshToken)
   }
 }

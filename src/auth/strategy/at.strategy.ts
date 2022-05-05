@@ -29,7 +29,6 @@ export class ATStrategy extends PassportStrategy(
   //TODO Check video igen når han laver det her - hvorfor hedder den validate
 
   validate(payload: JwtPayload) {
-    console.log('JWT', payload)
     return payload
   }
 
