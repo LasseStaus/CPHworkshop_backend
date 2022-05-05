@@ -2,7 +2,7 @@ import { ForbiddenException, HttpStatus, Injectable, Res } from '@nestjs/common'
 import { User, Booking } from '@prisma/client'
 
 import { PrismaService } from 'src/prisma/prisma.service'
-import { AuthDto } from './dto'
+import { LoginDto, SignupDto } from './dto'
 import * as argon from 'argon2'
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime'
 import { domainToASCII } from 'url'
@@ -10,6 +10,7 @@ import { JwtService } from '@nestjs/jwt'
 import { ConfigService } from '@nestjs/config'
 import { Tokens } from './types'
 import { response, Response } from 'express'
+import { hashConfig } from './helpers/hashconfig'
 
 @Injectable()
 export class AuthService {
@@ -19,13 +20,16 @@ export class AuthService {
     private configService: ConfigService
   ) {}
 
-  async signup(dto: AuthDto): Promise<Tokens> {
-    const hash = await argon.hash(dto.password)
+  async signup(dto: SignupDto): Promise<Tokens> {
+    const hash = await argon.hash(dto.password, { ...hashConfig })
 
     try {
       const user = await this.prismaService.user.create({
         data: {
           email: dto.email,
+          firstName: dto.firstname,
+          lastName: dto.lastname,
+          phonenumber: dto.phonenumber,
           hash
         }
       })
@@ -46,7 +50,8 @@ export class AuthService {
     }
   }
   ////OLD
-  async signin(dto: AuthDto) {
+
+  async signin(dto: LoginDto) {
     console.log('BACKEDND')
     const user = await this.prismaService.user.findUnique({
       where: {
@@ -61,33 +66,15 @@ export class AuthService {
 
     if (!user) throw new ForbiddenException('Credentials Incorret')
 
-    const pwMatches = await argon.verify(user.hash, dto.password)
+    const pwMatches = await argon.verify(user.hash, dto.password, {
+      ...hashConfig
+    })
     if (!pwMatches) throw new ForbiddenException('credentials incorrect')
 
     const tokens = await this.signToken(user.id, user.email)
     await this.updateRtHash(user.id, tokens.refresh_token)
 
-    //optional delete user.hash
     delete user.hash
-    //  console.log(tokens)
-    /* 
-    res.cookie('jwt', tokens, {
-      httpOnly: true,
-      domain: 'http://localhost:3000'
-    }) */
-    // return res.status(200).send(tokens.access_token)
-    const responseBody = {
-      user: user,
-      accessToken: tokens.access_token,
-      refreshToken: tokens.refresh_token
-    }
-    const newObj = {
-      id: user.id,
-      email: user.email,
-      token: tokens.access_token,
-      refresh: tokens.refresh_token
-    }
-    console.log(tokens)
 
     return tokens
   }
@@ -108,6 +95,8 @@ export class AuthService {
     return { henrik: 'henrik' }
   }
   async refreshTokens(userId: number, rt: string) {
+    console.log('er i refresh')
+
     const user = await this.prismaService.user.findUnique({
       where: {
         id: userId
@@ -118,7 +107,7 @@ export class AuthService {
       throw new ForbiddenException('Acces Denied - First')
     // check all exepections throws
 
-    const rtMathces = await argon.verify(user.hashedRt, rt)
+    const rtMathces = await argon.verify(user.hashedRt, rt, { ...hashConfig })
     if (!rtMathces) throw new ForbiddenException('Acces denied - second')
 
     const tokens = await this.signToken(user.id, user.email)
@@ -129,7 +118,7 @@ export class AuthService {
   }
 
   async updateRtHash(userId: number, rt: string) {
-    const hash = await argon.hash(rt)
+    const hash = await argon.hash(rt, { ...hashConfig })
     await this.prismaService.user.update({
       where: {
         id: userId
