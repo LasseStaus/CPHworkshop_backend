@@ -10,6 +10,7 @@ import { JwtService } from '@nestjs/jwt'
 import { ConfigService } from '@nestjs/config'
 import { Tokens } from './types'
 import { response, Response } from 'express'
+import { hashConfig } from './helpers/hashconfig'
 
 @Injectable()
 export class AuthService {
@@ -20,7 +21,7 @@ export class AuthService {
   ) {}
 
   async signup(dto: SignupDto): Promise<Tokens> {
-    const hash = await argon.hash(dto.password)
+    const hash = await argon.hash(dto.password, { ...hashConfig })
 
     try {
       const user = await this.prismaService.user.create({
@@ -64,7 +65,9 @@ export class AuthService {
 
     if (!user) throw new ForbiddenException('Credentials Incorret')
 
-    const pwMatches = await argon.verify(user.hash, dto.password)
+    const pwMatches = await argon.verify(user.hash, dto.password, {
+      ...hashConfig
+    })
     if (!pwMatches) throw new ForbiddenException('credentials incorrect')
 
     const tokens = await this.signToken(user.id, user.email)
@@ -103,7 +106,7 @@ export class AuthService {
       throw new ForbiddenException('Acces Denied - First')
     // check all exepections throws
 
-    const rtMathces = await argon.verify(user.hashedRt, rt)
+    const rtMathces = await argon.verify(user.hashedRt, rt, { ...hashConfig })
     if (!rtMathces) throw new ForbiddenException('Acces denied - second')
 
     const tokens = await this.signToken(user.id, user.email)
@@ -114,7 +117,7 @@ export class AuthService {
   }
 
   async updateRtHash(userId: number, rt: string) {
-    const hash = await argon.hash(rt)
+    const hash = await argon.hash(rt, { ...hashConfig })
     await this.prismaService.user.update({
       where: {
         id: userId
