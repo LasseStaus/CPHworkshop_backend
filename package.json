@@ -8,8 +8,9 @@
   "scripts": {
     "db:dev:rm": "docker compose rm db -s -f -v",
     "db:dev:up": "docker compose up db -d",
-    "prisma:migration:run": "npx prisma migrate deploy",
-    "db:dev:restart": "yarn db:dev:rm && yarn db:dev:up && sleep 1 && yarn prisma:migration:run",
+    "db:dev:clear": "docker system prune --volumes",
+    "prisma:migration:run": "yarn prisma generate && yarn prisma migrate dev",
+    "db:dev:restart": "yarn db:dev:rm && yarn db:dev:clear && yarn db:dev:up && sleep 1 && yarn prisma:migration:run",
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
