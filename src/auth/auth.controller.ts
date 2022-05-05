@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common'
 import { AuthService } from './auth.service'
 import { GetUser, GetUserId, PublicPath } from './decorator'
-import { AuthDto } from './dto'
+import { LoginDto, SignupDto } from './dto'
 import { AtGuard, RtGuard } from './guard'
 import { Tokens } from './types'
 
@@ -21,7 +21,7 @@ export class AuthController {
   @PublicPath()
   @Post('local/signup')
   @HttpCode(HttpStatus.CREATED)
-  signup(@Body() dto: AuthDto): Promise<Tokens> {
+  signup(@Body() dto: SignupDto): Promise<Tokens> {
     return this.authService.signup(dto)
   }
 
@@ -31,7 +31,7 @@ export class AuthController {
   @Post('local/signin')
   login(
     @Req() req,
-    @Body() dto: AuthDto,
+    @Body() dto: LoginDto,
     @Res({ passthrough: true }) res
     //TODO CHANGE ANY
   ): Promise<any> {
@@ -52,6 +52,7 @@ export class AuthController {
     @GetUserId() userId: number,
     @GetUser('refreshToken') refreshToken: string
   ) {
+    console.log('er i refresh')
     return this.authService.refreshTokens(userId, refreshToken)
   }
 }

@@ -18,8 +18,9 @@ model User {
   hash      String
   hashedRt  String?
 
-  firstName String?
-  lastName  String?
+  firstName   String?
+  lastName    String?
+  phonenumber String?
 
   Bookings Booking[]
   @@map("users")

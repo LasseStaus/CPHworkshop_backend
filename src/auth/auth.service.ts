@@ -2,7 +2,7 @@ import { ForbiddenException, HttpStatus, Injectable, Res } from '@nestjs/common'
 import { User, Booking } from '@prisma/client'
 
 import { PrismaService } from 'src/prisma/prisma.service'
-import { AuthDto } from './dto'
+import { LoginDto, SignupDto } from './dto'
 import * as argon from 'argon2'
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime'
 import { domainToASCII } from 'url'
@@ -19,13 +19,16 @@ export class AuthService {
     private configService: ConfigService
   ) {}
 
-  async signup(dto: AuthDto): Promise<Tokens> {
+  async signup(dto: SignupDto): Promise<Tokens> {
     const hash = await argon.hash(dto.password)
 
     try {
       const user = await this.prismaService.user.create({
         data: {
           email: dto.email,
+          firstName: dto.firstname,
+          lastName: dto.lastname,
+          phonenumber: dto.phonenumber,
           hash
         }
       })
@@ -46,7 +49,7 @@ export class AuthService {
     }
   }
   ////OLD
-  async signin(dto: AuthDto, res: Response) {
+  async signin(dto: LoginDto, res: Response) {
     console.log('BACKEDND')
     const user = await this.prismaService.user.findUnique({
       where: {
@@ -108,6 +111,8 @@ export class AuthService {
     return { henrik: 'henrik' }
   }
   async refreshTokens(userId: number, rt: string) {
+    console.log('er i refresh')
+
     const user = await this.prismaService.user.findUnique({
       where: {
         id: userId
