@@ -49,7 +49,7 @@ export class AuthService {
     }
   }
   ////OLD
-  async signin(dto: LoginDto, res: Response) {
+  async signin(dto: LoginDto) {
     console.log('BACKEDND')
     const user = await this.prismaService.user.findUnique({
       where: {
@@ -70,27 +70,7 @@ export class AuthService {
     const tokens = await this.signToken(user.id, user.email)
     await this.updateRtHash(user.id, tokens.refresh_token)
 
-    //optional delete user.hash
     delete user.hash
-    //  console.log(tokens)
-    /* 
-    res.cookie('jwt', tokens, {
-      httpOnly: true,
-      domain: 'http://localhost:3000'
-    }) */
-    // return res.status(200).send(tokens.access_token)
-    const responseBody = {
-      user: user,
-      accessToken: tokens.access_token,
-      refreshToken: tokens.refresh_token
-    }
-    const newObj = {
-      id: user.id,
-      email: user.email,
-      token: tokens.access_token,
-      refresh: tokens.refresh_token
-    }
-    console.log(tokens)
 
     return tokens
   }

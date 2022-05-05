@@ -30,12 +30,12 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post('local/signin')
   login(
-    @Req() req,
-    @Body() dto: LoginDto,
-    @Res({ passthrough: true }) res
+    /*     @Req() req, */
+    @Body() dto: LoginDto
+    /*     @Res({ passthrough: true }) res */
     //TODO CHANGE ANY
   ): Promise<any> {
-    return this.authService.signin(dto, res)
+    return this.authService.signin(dto)
   }
 
   @Post('logout')
