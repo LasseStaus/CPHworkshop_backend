@@ -1,6 +1,8 @@
 import {
   IsEmail,
   IsNotEmpty,
+  IsPhoneNumber,
+  isPhoneNumber,
   IsString,
   Length,
   Matches,
@@ -36,23 +38,20 @@ export class SignupDto {
   password: string
 
   @IsString()
-  @MinLength(8)
-  @MaxLength(50)
+  @IsNotEmpty()
+  firstname: string
+
+  @IsString()
+  @IsNotEmpty()
+  lastname: string
+
+  @IsString()
+  @IsNotEmpty()
+  @Matches(/^[1-9]\d{7}$/)
+  phonenumber: any
+
+  @IsString()
+  @Length(8, 50)
   @MatchExact(SignupDto, (s) => s.password)
   passwordConfirm: string
-
-  @IsString()
-  @IsNotEmpty()
-  firstname?: string
-
-  @IsString()
-  @IsNotEmpty()
-  lastname?: string
-
-  @IsString()
-  @IsNotEmpty()
-  @Length(8, 8, {
-    message: 'Phone number must be 8 characters long'
-  })
-  phonenumber?: string
 }
