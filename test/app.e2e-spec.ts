@@ -1,24 +1,32 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { INestApplication } from '@nestjs/common'
+import { INestApplication, ValidationPipe } from '@nestjs/common'
 import * as request from 'supertest'
 import { AppModule } from './../src/app.module'
+import { APP_PIPE } from '@nestjs/core'
 
-describe('AppController (e2e)', () => {
+describe('App e2e', () => {
   let app: INestApplication
-
-  beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
+  beforeAll(async () => {
+    //Creates a testingmodule based on our app module
+    //Basically we are simulating the server - Therefore everything that is a part of the real server, should be implemented here aswell
+    const moduleRef = await Test.createTestingModule({
       imports: [AppModule]
     }).compile()
 
-    app = moduleFixture.createNestApplication()
+    app = moduleRef.createNestApplication()
+
+    app.useGlobalPipes(
+      new ValidationPipe({
+        whitelist: true
+      })
+    )
     await app.init()
   })
 
-  it('/ (GET)', () => {
-    return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!')
+  afterAll(() => {
+    app.close()
   })
+
+  it.todo('should pass')
+  it.todo('should pas2')
 })

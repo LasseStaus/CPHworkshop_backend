@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime'
 import * as argon from 'argon2'
-import { PrismaService } from 'src/prisma/prisma.service'
+import { PrismaService } from '../prisma/prisma.service'
 import { LoginDto, SignupDto } from './dto'
 import { hashConfig } from './helpers/hashconfig'
 import { Tokens } from './types'
@@ -18,6 +18,8 @@ export class AuthService {
 
   async signup(dto: SignupDto): Promise<Tokens> {
     const hash = await argon.hash(dto.password, { ...hashConfig })
+
+    console.log('hej', hash)
 
     try {
       const user = await this.prismaService.user.create({

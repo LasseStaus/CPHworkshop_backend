@@ -7,10 +7,21 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: nestdb
+      POSTGRES_DB: db
     networks: 
       - db-network
+  testdb:
+    image: postgres:13
+    ports: 
+      - 5435:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: testdb
+    networks: 
+      - test-db-network
 
 networks:
   db-network:
+  test-db-network:
 

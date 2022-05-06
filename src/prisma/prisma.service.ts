@@ -15,11 +15,13 @@ export class PrismaService extends PrismaClient {
       },
       log: ['query', 'info', 'warn', 'error']
     })
-    // onModuleInit() {
-    // await this.$connect();
-    //}
-    // onModuledestroy() {/*  */
-    // await this.$connect();
-    //}
+
+    /*    cleanDb(){
+ 
+      return this.$transaction([
+        this.booking.deleteMany(),
+        this.user.deleteMany(),
+      ]);
+    } */
   }
 }
