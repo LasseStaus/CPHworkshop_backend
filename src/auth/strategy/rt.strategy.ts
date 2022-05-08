@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config'
 import { PassportStrategy } from '@nestjs/passport'
 import { Request } from 'express'
 import { ExtractJwt, Strategy } from 'passport-jwt'
-import { refreshToken } from '../types'
+import { RefreshToken } from '../types'
 
 @Injectable()
 export class RTStrategy extends PassportStrategy(
@@ -13,15 +13,15 @@ export class RTStrategy extends PassportStrategy(
   constructor(config: ConfigService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: config.get<string>('JWT_RT_SECRET'),
-      passReqToCallback: true
+      secretOrKey: config.get<string>('JWT_RT_SECRET'), // .env
+      passReqToCallback: true // returns the token
     })
   }
-  validate(req: Request, payload: refreshToken) {
-    console.log('BE - validate', payload)
+  validate(req: Request, payload: RefreshToken) {
+    console.log('BE - refresh validate', payload)
 
-    const refreshToken = req?.get('authorization')?.replace('Bearer', '').trim()
-    if (!refreshToken) throw new ForbiddenException('Refresh token malformed')
+    const refreshToken = req?.get('authorization')?.replace('Bearer', '').trim() // gets the refreshtoken from the Headers
+    if (!refreshToken) throw new ForbiddenException('Refresh token tampered')
     return {
       ...payload,
       refreshToken

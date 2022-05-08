@@ -2,15 +2,15 @@ import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { PrismaClient } from '@prisma/client'
 
-@Injectable() //enables depency injection? // implements OnModuleInit, OnModuleDestroy
+@Injectable() //enables depency injection // implements OnModuleInit, OnModuleDestroy
 export class PrismaService extends PrismaClient {
-  constructor(config: ConfigService) {
+  constructor(configService: ConfigService) {
     // super will call constructor of the class that we are extending
 
     super({
       datasources: {
         db: {
-          url: config.get('DATABASE_URL')
+          url: configService.get('DATABASE_URL') // .env file
         }
       },
       log: ['query', 'info', 'warn', 'error']

@@ -9,37 +9,26 @@ type JwtPayload = {
   email: string
 }
 
-@Injectable() // provider
+@Injectable() // enables dependency injections
 export class ATStrategy extends PassportStrategy(
-  Strategy,
+  Strategy, // JWT strategy
   'jwt_access_token' //this is the key name, defaults to "jwt" if nothing is written
 ) {
   constructor(
+    // dependency injections
     configService: ConfigService,
-    private prismaService: PrismaService
+    // private prismaService: PrismaService
   ) {
     super({
-      // passport jwt
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), // how to get the token, extraxt from headers
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), // how to get the token, extract from headers
       ignoreExpiration: false,
-      secretOrKey: configService.get('JWT_AT_SECRET') // the secret password to sign the tokens
+      secretOrKey: configService.get('JWT_AT_SECRET') // from .env. Tokens are signed with the secret, the strategy needs det same secret to verify the token 
     })
   }
-
-  //TODO Check video igen når han laver det her - hvorfor hedder den validate
 
   validate(payload: JwtPayload) {
-    return payload
+    // payload is the decoded object of the signed token with user info
+    return payload // append the payload to the user object of the request object because of express --> req.user = payload
   }
 
-  /*   async validate(payload: {
-    // payload from token
-    sub: number
-    email: string
-  }) {
-    const user = await this.prismaService.user.findUnique({
-      where: { id: payload.sub }
-    })
-    delete user.hash
-  } */
 }
