@@ -1,13 +1,5 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Patch
-} from '@nestjs/common'
+import { Body, Controller, Get, Patch } from '@nestjs/common'
 import { User } from '@prisma/client'
-import { GetUserId } from '../auth/decorator'
 import { GetUser } from '../auth/decorator'
 import { EditUserDto } from './dto'
 import { UserService } from './user.service'
