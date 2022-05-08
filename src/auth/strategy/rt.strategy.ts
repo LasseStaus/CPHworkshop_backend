@@ -18,8 +18,6 @@ export class RTStrategy extends PassportStrategy(
     })
   }
   validate(req: Request, payload: refreshToken) {
-    console.log('BE - validate', payload)
-
     const refreshToken = req?.get('authorization')?.replace('Bearer', '').trim()
     if (!refreshToken) throw new ForbiddenException('Refresh token malformed')
     return {

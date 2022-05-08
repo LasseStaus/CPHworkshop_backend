@@ -5,7 +5,10 @@ import { AuthGuard } from '@nestjs/passport'
 @Injectable()
 export class AtGuard extends AuthGuard('jwt_access_token') {
   // maybe remove global guard
+
   constructor(private reflector: Reflector) {
+    console.log('hesadasdsaasdsadasdj')
+
     super()
   }
 

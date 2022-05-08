@@ -1,4 +1,9 @@
-import { ForbiddenException, Injectable } from '@nestjs/common'
+import {
+  ForbiddenException,
+  HttpCode,
+  HttpStatus,
+  Injectable
+} from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime'
@@ -18,8 +23,6 @@ export class AuthService {
 
   async signup(dto: SignupDto): Promise<Tokens> {
     const hash = await argon.hash(dto.password, { ...hashConfig })
-
-    console.log('hej', hash)
 
     try {
       const user = await this.prismaService.user.create({
@@ -73,22 +76,18 @@ export class AuthService {
 
   async logout(userId: number) {
     // delete refresh hash
-    try {
-      await this.prismaService.user.updateMany({
-        where: {
-          id: userId,
-          hashedRt: {
-            not: null
-          }
-        },
-        data: {
-          hashedRt: null
+
+    await this.prismaService.user.updateMany({
+      where: {
+        id: userId,
+        hashedRt: {
+          not: null
         }
-      })
-      return { message: 'BE - Logout successfull' }
-    } catch (err) {
-      return { message: 'BE - Logout failed', error: err }
-    }
+      },
+      data: {
+        hashedRt: null
+      }
+    })
   }
   async refreshTokens(userId: number, rt: string) {
     const user = await this.prismaService.user.findUnique({

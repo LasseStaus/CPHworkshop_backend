@@ -28,11 +28,11 @@ export class ATStrategy extends PassportStrategy(
 
   //TODO Check video igen når han laver det her - hvorfor hedder den validate
 
-  validate(payload: JwtPayload) {
+  /*   validate(payload: JwtPayload) {
     return payload
-  }
+  } */
 
-  /*   async validate(payload: {
+  async validate(payload: {
     // payload from token
     sub: number
     email: string
@@ -41,5 +41,6 @@ export class ATStrategy extends PassportStrategy(
       where: { id: payload.sub }
     })
     delete user.hash
-  } */
+    return user
+  }
 }
