@@ -68,8 +68,8 @@ describe('App e2e', () => {
     }
     editUserDto = {
       email: 'newmail@gmail.com',
-      firstName: 'NewFirstname',
-      lastName: 'NewLastname'
+      firstname: 'NewFirstname',
+      lastname: 'NewLastname'
     }
   })
   afterAll(() => {
