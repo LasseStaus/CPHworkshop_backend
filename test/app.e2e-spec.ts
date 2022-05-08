@@ -170,7 +170,6 @@ describe('App e2e', () => {
           .expectStatus(200)
       })
       it('Can edit user data with valid access token', () => {
-        console.log('edituserDTO in patch', editUserDto)
         return pactum
           .spec()
           .patch('/user/edit')

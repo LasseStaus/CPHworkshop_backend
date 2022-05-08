@@ -43,7 +43,7 @@ export class AuthService {
     } catch (err) {
       if (err instanceof PrismaClientKnownRequestError) {
         if ((err.code = 'P2002')) {
-          throw new ForbiddenException('BE - Credentials taken hej')
+          throw new ForbiddenException('BE - Credentials taken')
         }
         console.log('BE log - Signup - Prisma Error', err)
       }

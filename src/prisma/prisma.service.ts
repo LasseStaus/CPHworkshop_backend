@@ -13,7 +13,9 @@ export class PrismaService extends PrismaClient {
           url: config.get('DATABASE_URL')
         }
       },
-      log: ['query', 'info', 'warn', 'error']
+      // Enable any of these to see prisma logs
+      // log: ['query', 'info', 'warn', 'error']
+      log: ['warn', 'error']
     })
   }
   cleanDb() {

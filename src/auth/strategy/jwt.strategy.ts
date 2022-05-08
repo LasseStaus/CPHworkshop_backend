@@ -22,14 +22,14 @@ export class JwtStrategy extends PassportStrategy(
   //TODO Check video igen når han laver det her - hvorfor hedder den validate
 
   async validate(payload: { sub: number; email: string }) {
-    console.log('in validate')
+    console.log('in JWT STRATEGY WHY')
 
     const user = await this.prismaService.user.findUnique({
       where: { id: payload.sub }
     })
     delete user.hash
 
-    console.log('JWT Strategy', { payload })
+    // console.log('JWT Strategy', { payload })
 
     return 'finder en user'
   }
