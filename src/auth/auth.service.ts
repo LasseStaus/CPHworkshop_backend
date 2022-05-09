@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime'
 import * as argon from 'argon2'
-import { PrismaService } from 'src/prisma/prisma.service'
+import { PrismaService } from '../prisma/prisma.service'
 import { LoginDto, SignupDto } from './dto'
 import { hashConfig } from './helpers/hashconfig'
 import { Tokens } from './types'
@@ -23,8 +23,8 @@ export class AuthService {
       const user = await this.prismaService.user.create({
         data: {
           email: dto.email,
-          firstName: dto.firstname,
-          lastName: dto.lastname,
+          firstname: dto.firstname,
+          lastname: dto.lastname,
           phonenumber: dto.phonenumber,
           hash
         }
@@ -38,7 +38,7 @@ export class AuthService {
     } catch (err) {
       if (err instanceof PrismaClientKnownRequestError) {
         if ((err.code = 'P2002')) {
-          throw new ForbiddenException('BE - Credentials taken hej')
+          throw new ForbiddenException('BE - Credentials taken')
         }
         console.log('BE log - Signup - Prisma Error', err)
       }
@@ -71,22 +71,18 @@ export class AuthService {
 
   async logout(userId: number) {
     // delete refresh hash
-    try {
-      await this.prismaService.user.updateMany({
-        where: {
-          id: userId,
-          hashedRt: {
-            not: null
-          }
-        },
-        data: {
-          hashedRt: null
+
+    await this.prismaService.user.updateMany({
+      where: {
+        id: userId,
+        hashedRt: {
+          not: null
         }
-      })
-      return { message: 'BE - Logout successfull' }
-    } catch (err) {
-      return { message: 'BE - Logout failed', error: err }
-    }
+      },
+      data: {
+        hashedRt: null
+      }
+    })
   }
   async refreshTokens(userId: number, rt: string) {
     const user = await this.prismaService.user.findUnique({

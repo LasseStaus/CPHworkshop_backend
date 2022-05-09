@@ -18,8 +18,8 @@ model User {
   hash      String
   hashedRt  String?
 
-  firstName   String?
-  lastName    String?
+  firstname   String?
+  lastname    String?
   phonenumber String?
 
   Bookings Booking[]
