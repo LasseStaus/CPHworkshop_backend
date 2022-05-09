@@ -154,6 +154,7 @@ describe('App e2e', () => {
           .expectStatus(200)
           .expectBodyContains('access_token')
           .expectBodyContains('refresh_token')
+        //ensuring that access and refresh token was returned
       })
     })
   })
@@ -179,6 +180,7 @@ describe('App e2e', () => {
           .expectBodyContains(signupDto.phonenumber)
           .expectBodyContains(signupDto.firstname)
           .expectBodyContains(signupDto.lastname)
+        //ensuring that correct data is returned
       })
     })
 
@@ -212,6 +214,7 @@ describe('App e2e', () => {
           .expectBodyContains(editUserDto.email)
           .expectBodyContains(editUserDto.firstname)
           .expectBodyContains(editUserDto.lastname)
+        //ensuring that the user was updated by expecting the editUserDto data from the response
       })
     })
   })
