@@ -8,6 +8,7 @@ import { PrismaService } from '../src/prisma/prisma.service'
 import { AppModule } from './../src/app.module'
 
 describe('App e2e', () => {
+  // Initializes the variables and types used during testing
   let app: INestApplication
   let prismaService: PrismaService
   let jwtService: JwtService
@@ -16,48 +17,42 @@ describe('App e2e', () => {
   let loginDto: LoginDto
   let editUserDto: EditUserDto
 
+  // Defines the setup that will simulate the entirety of the real server
   beforeAll(async () => {
-    //Creates a testingmodule based on our app module
-    //Basically we are simulating the server - Therefore everything that is a part of the real server, should be implemented here aswell
+    // Compiles an instance of a testing module, that imports the entirety of our application.
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule]
     }).compile()
 
+    // Initializes the compiled module into an application instance
     app = moduleRef.createNestApplication()
-
+    // Initializes the validaton pipes uses for class validators
     app.useGlobalPipes(
       new ValidationPipe({
         whitelist: true
       })
     )
-    //Create test application
+    //Creates test application
     await app.init()
-    //Start server
+    //Launches the server on port 3333
     await app.listen(3333)
 
     prismaService = app.get(PrismaService)
+    jwtService = app.get(JwtService)
 
+    //not sure if used??
     await prismaService.cleanDb()
+    //Sets baseURL of requests for all pactum requests used in testing
     pactum.request.setBaseUrl('http://localhost:3333')
   })
 
   beforeEach(async () => {
-    async function getBearerToken(id: number) {
-      return jwtService.signAsync({
-        sub: id.toString(),
-        email: 'test@gmail.com'
-      })
-    }
-    jwtService = new JwtService({
-      secret: 'someRandomSecret',
-      signOptions: { expiresIn: '15m' }
-    })
-    invalidBearerToken = await getBearerToken(1)
-
+    // Valid DTO for login
     loginDto = {
       email: 'test@gmail.com',
       password: '232323AAAaaa'
     }
+    // Valid DTO for login
     signupDto = {
       email: 'test@gmail.com',
       password: '232323AAAaaa',
@@ -66,22 +61,39 @@ describe('App e2e', () => {
       phonenumber: '23232323',
       passwordConfirm: '232323AAAaaa'
     }
+    // Valid DTO for editing user information
     editUserDto = {
       email: 'newmail@gmail.com',
       firstname: 'NewFirstname',
       lastname: 'NewLastname'
     }
+
+    async function getBearerToken(id: number) {
+      return jwtService.signAsync({
+        sub: id.toString(),
+        email: signupDto.email
+      })
+    }
+    jwtService = new JwtService({
+      secret: 'someRandomSecret',
+      signOptions: { expiresIn: '15m' }
+    })
+    // JWT token used for both invalid Access and refresh token.
+    // Is generated with a secret that is different from the .env secrets
+    invalidBearerToken = await getBearerToken(1)
   })
+
+  //closes the applicaton after all tests are ran
   afterAll(() => {
     app.close()
   })
 
   describe('Auth e2e test', () => {
     describe('Signup user', () => {
-      it('Can NOT signup without valid body', async () => {
+      it('Can NOT signup without valid body', () => {
         return pactum.spec().post('/auth/local/signup').expectStatus(400)
       })
-      it('Can NOT signup with invalid email', async () => {
+      it('Can NOT signup with invalid email', () => {
         const { email, ...noEmailDto } = signupDto
         return pactum
           .spec()
@@ -89,8 +101,7 @@ describe('App e2e', () => {
           .withBody(noEmailDto)
           .expectStatus(400)
       })
-
-      it('Can NOT signup with invalid password', async () => {
+      it('Can NOT signup with invalid password', () => {
         const { password, ...noPasswordDTO } = signupDto
         return pactum
           .spec()
@@ -106,19 +117,25 @@ describe('App e2e', () => {
           .expectStatus(201)
       })
     })
+
     describe('Login user', () => {
       it('Can NOT log in with invalid body', () => {
         return pactum.spec().post('/auth/local/signin').expectStatus(400)
       })
       it('Can log in with valid body', () => {
-        return pactum
-          .spec()
-          .post('/auth/local/signin')
-          .withBody(loginDto)
-          .expectStatus(200)
-          .stores('user_access_token', 'access_token')
-          .stores('user_refresh_token', 'refresh_token')
-        //Storing valid AT and RT for further tests -- Hence why logout-tests are placed at the end
+        return (
+          pactum
+            .spec()
+            .post('/auth/local/signin')
+            .withBody(loginDto)
+            .expectStatus(200)
+            .stores('user_access_token', 'access_token')
+            .stores('user_refresh_token', 'refresh_token')
+            //Storing valid AT and RT for further tests in the flow
+            .expectBodyContains('access_token')
+            .expectBodyContains('refresh_token')
+          //ensuring that access and refresh token was returned
+        )
       })
     })
     describe('Post refresh token', () => {
@@ -135,6 +152,8 @@ describe('App e2e', () => {
           .post('/auth/refresh')
           .withHeaders({ Authorization: 'Bearer $S{user_refresh_token}' })
           .expectStatus(200)
+          .expectBodyContains('access_token')
+          .expectBodyContains('refresh_token')
       })
     })
   })
@@ -156,9 +175,13 @@ describe('App e2e', () => {
           .get('/user/profile')
           .withHeaders({ Authorization: 'Bearer $S{user_access_token}' })
           .expectStatus(200)
-          .expectBodyContains(loginDto.email)
+          .expectBodyContains(signupDto.email)
+          .expectBodyContains(signupDto.phonenumber)
+          .expectBodyContains(signupDto.firstname)
+          .expectBodyContains(signupDto.lastname)
       })
     })
+
     describe('Can edit user data', () => {
       it('Can NOT edit user data without access token', () => {
         return pactum.spec().patch('/user/edit').expectStatus(401)
@@ -168,14 +191,15 @@ describe('App e2e', () => {
           .spec()
           .patch('/user/edit')
           .withHeaders({ Authorization: `Bearer ${invalidBearerToken}` })
+          .withBody(editUserDto)
           .expectStatus(401)
       })
       it('Can edit user data with valid access token', () => {
         return pactum
           .spec()
           .patch('/user/edit')
-          .withHeaders({ Authorization: 'Bearer $S{user_access_token}' })
           .withBody(editUserDto)
+          .withHeaders({ Authorization: 'Bearer $S{user_access_token}' })
           .expectStatus(200)
       })
       it('Can get updated/edited user data with valid access token', () => {
