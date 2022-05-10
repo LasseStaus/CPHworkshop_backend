@@ -41,7 +41,6 @@ export class AuthService {
       // update refresh token of user
       await this.updateRefreshTokenHash(user.id, tokens.refresh_token)
 
-      // delete user.hash TO DO, evt slet?
       return tokens
     } catch (err) {
 
@@ -79,10 +78,6 @@ export class AuthService {
     // create tokens
     const tokens = await this.signTokens(user.id, user.email)
     await this.updateRefreshTokenHash(user.id, tokens.refresh_token)
-
-
-    // delete password before return. TO DO, maybe delete?
-    // delete user.hash
 
     return tokens
   }
