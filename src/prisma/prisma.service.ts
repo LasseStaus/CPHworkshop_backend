@@ -13,13 +13,15 @@ export class PrismaService extends PrismaClient {
           url: configService.get('DATABASE_URL') // .env file
         }
       },
-      log: ['query', 'info', 'warn', 'error']
+      // Enable any of these to see prisma logs
+      // log: ['query', 'info', 'warn', 'error']
+      log: ['warn', 'error']
     })
-    // onModuleInit() {
-    // await this.$connect();
-    //}
-    // onModuledestroy() {/*  */
-    // await this.$connect();
-    //}
+  }
+  cleanDb() {
+    return this.$transaction([
+      this.booking.deleteMany(),
+      this.user.deleteMany()
+    ])
   }
 }

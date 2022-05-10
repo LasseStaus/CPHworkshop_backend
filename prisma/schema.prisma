@@ -10,6 +10,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+generator erd {
+  provider = "prisma-erd-generator"
+  output   = "../ERD/erd.png"
+}
+
 model User {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
@@ -18,8 +23,8 @@ model User {
   hash      String
   hashedRt  String?
 
-  firstName   String?
-  lastName    String?
+  firstname   String?
+  lastname    String?
   phonenumber String?
 
   Bookings Booking[]

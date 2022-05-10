@@ -11,8 +11,11 @@ export const GetUser = createParamDecorator(
       .switchToHttp()
       .getRequest() //req object of express
 
-    if (!data) return request.user
+    // if (!data) return request.user
 
-    return request.user[data]
+    if (data) {
+      return request.user[data]
+    }
+    return request.user
   }
 )
