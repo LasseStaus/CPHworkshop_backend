@@ -22,7 +22,7 @@ export class ATStrategy extends PassportStrategy(
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), // how to get the token, extract from headers
       ignoreExpiration: false,
-      secretOrKey: configService.get('JWT_AT_SECRET') // from .env. Tokens are signed with the secret, the strategy needs det same secret to verify the token 
+      secretOrKey: configService.get('JWT_AT_SECRET') // from .env. Tokens are signed with the secret, the strategy needs det same secret to verify the token
     })
   }
 
@@ -42,5 +42,4 @@ export class ATStrategy extends PassportStrategy(
   //   delete user.hash
   //   return user
   // }
-
 }

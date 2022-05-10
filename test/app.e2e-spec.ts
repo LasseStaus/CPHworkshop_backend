@@ -173,17 +173,19 @@ describe('App e2e', () => {
           .expectStatus(401)
       })
       it('Can get user data with valid access token', () => {
-        return pactum
-          .spec()
-          .get('/user/profile')
-          .withHeaders({ Authorization: 'Bearer $S{user_access_token}' })
-          .expectStatus(200)
-          .expectBodyContains(signupDto.email)
-          .expectBodyContains(signupDto.phonenumber)
-          .expectBodyContains(signupDto.firstname)
-          .expectBodyContains(signupDto.lastname)
-          //ensuring that correct data is returned
-          .inspect()
+        return (
+          pactum
+            .spec()
+            .get('/user/profile')
+            .withHeaders({ Authorization: 'Bearer $S{user_access_token}' })
+            .expectStatus(200)
+            .expectBodyContains(signupDto.email)
+            .expectBodyContains(signupDto.phonenumber)
+            .expectBodyContains(signupDto.firstname)
+            .expectBodyContains(signupDto.lastname)
+            //ensuring that correct data is returned
+            .inspect()
+        )
       })
     })
 

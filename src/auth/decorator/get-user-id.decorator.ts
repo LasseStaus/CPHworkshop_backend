@@ -8,8 +8,7 @@ export const GetUserId = createParamDecorator(
     ctx: ExecutionContext
   ) => {
     const request: Express.Request = ctx.switchToHttp().getRequest()
-    console.log('USER FROM USERID DECO', request.user);
-
+    console.log('USER FROM USERID DECO', request.user)
 
     return request.user['sub'] // sub from token as id
   }

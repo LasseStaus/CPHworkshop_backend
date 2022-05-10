@@ -15,11 +15,9 @@ export class AuthService {
     private prismaService: PrismaService,
     private jwtService: JwtService,
     private configService: ConfigService
-  ) { }
-
+  ) {}
 
   // #####################################
-
 
   async signup(dto: SignupDto): Promise<Tokens> {
     const hash = await argon.hash(dto.password, { ...hashConfig })
@@ -43,10 +41,11 @@ export class AuthService {
 
       return tokens
     } catch (err) {
+      if (err instanceof PrismaClientKnownRequestError) {
+        // if error comes from prisma or not
 
-      if (err instanceof PrismaClientKnownRequestError) { // if error comes from prisma or not
-
-        if ((err.code = 'P2002')) { // prisma error code for dublicate field
+        if ((err.code = 'P2002')) {
+          // prisma error code for dublicate field
           throw new ForbiddenException('BE - Credentials taken')
         }
 
@@ -57,7 +56,6 @@ export class AuthService {
   }
 
   // #####################################
-
 
   async signin(dto: LoginDto) {
     const user = await this.prismaService.user.findUnique({
@@ -82,12 +80,9 @@ export class AuthService {
     return tokens
   }
 
-
   // #####################################
 
-
   async logout(userId: number) {
-
     // delete refresh hash
     await this.prismaService.user.updateMany({
       where: {
@@ -98,15 +93,13 @@ export class AuthService {
       },
       data: {
         hashedRt: null
-      },
+      }
     })
   }
-
 
   // #####################################
 
   async refreshTokens(userId: number, rt: string) {
-
     // find user
     const user = await this.prismaService.user.findUnique({
       where: {
@@ -120,7 +113,10 @@ export class AuthService {
 
     // compare hash of the refresh tokens
     const rtMathces = await argon.verify(user.hashedRt, rt, { ...hashConfig })
-    if (!rtMathces) throw new ForbiddenException('BE - Acces denied - refresh tokens does not match')
+    if (!rtMathces)
+      throw new ForbiddenException(
+        'BE - Acces denied - refresh tokens does not match'
+      )
 
     // generate new tokens
     const tokens = await this.signTokens(user.id, user.email)
@@ -132,9 +128,7 @@ export class AuthService {
 
   // #####################################
 
-
   async updateRefreshTokenHash(userId: number, rt: string) {
-
     const hash = await argon.hash(rt, { ...hashConfig }) // hash the refresh token
 
     // updates user with new refreshToken hash
@@ -153,10 +147,7 @@ export class AuthService {
     }
   }
 
-
   // #####################################
-
-
 
   async signTokens(
     // the data we want to sign
@@ -166,7 +157,6 @@ export class AuthService {
     access_token: string
     refresh_token: string
   }> {
-
     // data object to sign
     const payload = {
       sub: userId,
@@ -177,10 +167,8 @@ export class AuthService {
     const atSecret = this.configService.get('JWT_AT_SECRET')
     const rtSecret = this.configService.get('JWT_RT_SECRET')
 
-
     // signing the tokens
     const [at, rt] = await Promise.all([
-
       // access token
       this.jwtService.signAsync(payload, {
         expiresIn: '15m',

@@ -4,7 +4,8 @@ import { AuthGuard } from '@nestjs/passport'
 
 @Injectable()
 // Global guard
-export class AtGuard extends AuthGuard('jwt_access_token') { // AtGuard will protect using the at.strategy.ts based on its key
+export class AtGuard extends AuthGuard('jwt_access_token') {
+  // AtGuard will protect using the at.strategy.ts based on its key
 
   constructor(private reflector: Reflector) {
     super()
@@ -12,7 +13,6 @@ export class AtGuard extends AuthGuard('jwt_access_token') { // AtGuard will pro
   }
 
   canActivate(context: ExecutionContext) {
-
     // if true, lets sign in
     const isPublic = this.reflector.getAllAndOverride('isPublic', [
       // where to look for 'isPublic'

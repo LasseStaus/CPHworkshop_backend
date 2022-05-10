@@ -8,7 +8,8 @@ import { AtGuard } from './auth/guard'
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ // to load the .env file throughout the app. Has a built in ConfigService
+    ConfigModule.forRoot({
+      // to load the .env file throughout the app. Has a built in ConfigService
       isGlobal: true // expose ConfigService globally
     }),
     AuthModule,
@@ -23,4 +24,4 @@ import { AtGuard } from './auth/guard'
     }
   ]
 })
-export class AppModule { }
+export class AppModule {}
