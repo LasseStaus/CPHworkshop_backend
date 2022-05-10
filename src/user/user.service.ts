@@ -4,7 +4,7 @@ import { EditUserDto } from './dto'
 
 @Injectable()
 export class UserService {
-  constructor(private prismaservice: PrismaService) {}
+  constructor(private prismaservice: PrismaService) { }
 
   async getUser(userId: number) {
     const user = await this.prismaservice.user.findUnique({
@@ -17,6 +17,8 @@ export class UserService {
   }
 
   async editUser(userId: number, dto: EditUserDto) {
+    console.log("USER ID", userId);
+
     const user = await this.prismaservice.user.update({
       where: {
         id: userId

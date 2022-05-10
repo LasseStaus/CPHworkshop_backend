@@ -17,7 +17,7 @@ export class ATStrategy extends PassportStrategy(
   constructor(
     // dependency injections
     configService: ConfigService,
-    // private prismaService: PrismaService
+    private prismaService: PrismaService
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), // how to get the token, extract from headers
@@ -30,5 +30,17 @@ export class ATStrategy extends PassportStrategy(
     // payload is the decoded object of the signed token with user info
     return payload // append the payload to the user object of the request object because of express --> req.user = payload
   }
+
+  // async validate(payload: {
+  //   // payload from token
+  //   sub: number
+  //   email: string
+  // }) {
+  //   const user = await this.prismaService.user.findUnique({
+  //     where: { id: payload.sub }
+  //   })
+  //   delete user.hash
+  //   return user
+  // }
 
 }

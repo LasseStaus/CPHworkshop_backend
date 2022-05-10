@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Patch } from '@nestjs/common'
 import { User } from '@prisma/client'
-import { GetUser } from '../auth/decorator'
+import { GetUser, GetUserId } from '../auth/decorator'
 import { EditUserDto } from './dto'
 import { UserService } from './user.service'
 
@@ -13,7 +13,11 @@ export class UserController {
   }
 
   @Patch('edit')
-  editUser(@GetUser('') user: User, @Body() dto: EditUserDto) {
-    return this.userservice.editUser(user.id, dto)
+  // editUser(@GetUserId() user: number, @Body() dto: EditUserDto) {
+  editUser(@GetUserId() id: number, @Body() dto: EditUserDto) {
+    console.log("USER HER", id);
+    // console.log("USER sub HER", user['sub']);
+
+    return this.userservice.editUser(id, dto)
   }
 }
