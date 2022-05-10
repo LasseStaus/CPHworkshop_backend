@@ -3,7 +3,7 @@ export type Tokens = {
   refresh_token: string
 }
 
-export type refreshToken = {
+export type RefreshToken = {
   sub: number
   email: string
   iat: number

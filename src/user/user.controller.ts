@@ -1,19 +1,19 @@
 import { Body, Controller, Get, Patch } from '@nestjs/common'
-import { User } from '@prisma/client'
-import { GetUser } from '../auth/decorator'
+import { GetUserId } from '../auth/decorator'
 import { EditUserDto } from './dto'
 import { UserService } from './user.service'
 
-@Controller('user')
+@Controller('user') // decorator that can recieve requests and produce responses with prefix route 'user'
 export class UserController {
-  constructor(private userservice: UserService) {}
-  @Get('profile')
-  getProfile(@GetUser('') user: User) {
-    return user
+  constructor(private userservice: UserService) { }
+  @Get('profile') // method and path
+  getUser(@GetUserId() id: number) {
+    // get info about the current user using costume decorator
+    return this.userservice.getUser(id)
   }
 
   @Patch('edit')
-  editUser(@GetUser('') user: User, @Body() dto: EditUserDto) {
-    return this.userservice.editUser(user.id, dto)
+  editUser(@GetUserId() id: number, @Body() dto: EditUserDto) {
+    return this.userservice.editUser(id, dto)
   }
 }

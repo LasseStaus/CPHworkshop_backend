@@ -7,25 +7,29 @@ import {
   UseGuards
 } from '@nestjs/common'
 import { AuthService } from './auth.service'
-import { GetUser, GetUserId, PublicPath } from './decorator'
+import { GetUserToken, GetUserId, PublicPath } from './decorator'
 import { LoginDto, SignupDto } from './dto'
 import { RtGuard } from './guard'
 import { Tokens } from './types'
 
-@Controller('auth')
+@Controller('auth') // decorator that can recieve requests and produce responses with prefix route
 export class AuthController {
+  // Instansiate the auth service using dependency injection
+  // private syntax allows us to both declare and initialize the AuthService immediately in the same
   constructor(private authService: AuthService) {}
 
   @PublicPath()
+  // 201 status code pr default
   @Post('local/signup')
   @HttpCode(HttpStatus.CREATED)
   signup(@Body() dto: SignupDto): Promise<Tokens> {
-    return this.authService.signup(dto)
+    // @body allows us to get the body of the request
+    return this.authService.signup(dto) // return the function from AuthService
   }
 
   @PublicPath()
   // needs meta data to donts use AT guad
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.OK) // 200 status code
   @Post('local/signin')
   login(@Body() dto: LoginDto): Promise<Tokens> {
     return this.authService.signin(dto)
@@ -42,8 +46,9 @@ export class AuthController {
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
   refreshTokens(
+    // using costume decorators
     @GetUserId() userId: number,
-    @GetUser('refreshToken') refreshToken: string
+    @GetUserToken('refreshToken') refreshToken: string
   ) {
     return this.authService.refreshTokens(userId, refreshToken)
   }

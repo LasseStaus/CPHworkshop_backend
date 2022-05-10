@@ -115,6 +115,7 @@ describe('App e2e', () => {
           .post('/auth/local/signup')
           .withBody(signupDto)
           .expectStatus(201)
+          .inspect()
       })
     })
 
@@ -134,6 +135,7 @@ describe('App e2e', () => {
             //Storing valid AT and RT for further tests in the flow
             .expectBodyContains('access_token')
             .expectBodyContains('refresh_token')
+            .inspect()
           //ensuring that access and refresh token was returned
         )
       })
@@ -171,16 +173,19 @@ describe('App e2e', () => {
           .expectStatus(401)
       })
       it('Can get user data with valid access token', () => {
-        return pactum
-          .spec()
-          .get('/user/profile')
-          .withHeaders({ Authorization: 'Bearer $S{user_access_token}' })
-          .expectStatus(200)
-          .expectBodyContains(signupDto.email)
-          .expectBodyContains(signupDto.phonenumber)
-          .expectBodyContains(signupDto.firstname)
-          .expectBodyContains(signupDto.lastname)
-        //ensuring that correct data is returned
+        return (
+          pactum
+            .spec()
+            .get('/user/profile')
+            .withHeaders({ Authorization: 'Bearer $S{user_access_token}' })
+            .expectStatus(200)
+            .expectBodyContains(signupDto.email)
+            .expectBodyContains(signupDto.phonenumber)
+            .expectBodyContains(signupDto.firstname)
+            .expectBodyContains(signupDto.lastname)
+            //ensuring that correct data is returned
+            .inspect()
+        )
       })
     })
 

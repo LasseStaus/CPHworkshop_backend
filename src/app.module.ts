@@ -9,15 +9,16 @@ import { AtGuard } from './auth/guard'
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true
+      // to load the .env file throughout the app. Has a built in ConfigService
+      isGlobal: true // expose ConfigService globally
     }),
     AuthModule,
     UserModule,
     PrismaModule
   ],
   providers: [
-    // automatically detect
     {
+      // Declare the global guard of the application
       provide: APP_GUARD,
       useClass: AtGuard
     }
