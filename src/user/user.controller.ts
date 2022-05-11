@@ -5,15 +5,15 @@ import { UserService } from './user.service'
 
 @Controller('user') // decorator that can recieve requests and produce responses with prefix route 'user'
 export class UserController {
-  constructor(private userservice: UserService) { }
+  constructor(private userservice: UserService) {}
   @Get('profile') // method and path
-  getUser(@GetUserId() id: number) {
+  getUser(@GetUserId() id: string) {
     // get info about the current user using costume decorator
     return this.userservice.getUser(id)
   }
 
   @Patch('edit')
-  editUser(@GetUserId() id: number, @Body() dto: EditUserDto) {
+  editUser(@GetUserId() id: string, @Body() dto: EditUserDto) {
     return this.userservice.editUser(id, dto)
   }
 }

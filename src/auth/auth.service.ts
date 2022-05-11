@@ -82,7 +82,7 @@ export class AuthService {
 
   // #####################################
 
-  async logout(userId: number) {
+  async logout(userId: string) {
     // delete refresh hash
     await this.prismaService.user.updateMany({
       where: {
@@ -99,7 +99,7 @@ export class AuthService {
 
   // #####################################
 
-  async refreshTokens(userId: number, rt: string) {
+  async refreshTokens(userId: string, rt: string) {
     // find user
     const user = await this.prismaService.user.findUnique({
       where: {
@@ -128,7 +128,7 @@ export class AuthService {
 
   // #####################################
 
-  async updateRefreshTokenHash(userId: number, rt: string) {
+  async updateRefreshTokenHash(userId: string, rt: string) {
     const hash = await argon.hash(rt, { ...hashConfig }) // hash the refresh token
 
     // updates user with new refreshToken hash
@@ -151,7 +151,7 @@ export class AuthService {
 
   async signTokens(
     // the data we want to sign
-    userId: number,
+    userId: string,
     email: string
   ): Promise<{
     access_token: string

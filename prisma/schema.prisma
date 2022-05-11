@@ -16,31 +16,52 @@ generator erd {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  email     String   @unique
-  hash      String
-  hashedRt  String?
-
+  id          String   @id @unique @default(uuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  email       String   @unique
+  hash        String
+  hashedRt    String?
   firstname   String?
   lastname    String?
   phonenumber String?
 
-  Bookings Booking[]
+  bookings Booking[]
+  purchase Purchase[]
+  ticket   Ticket?
   @@map("users")
 }
 
 model Booking {
-
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  title  String
-  userId Int
-  user   User   @relation(fields: [userId], references: [id])
-
+  bookedFor DateTime
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
 
   @@map("bookings")
 }
+
+model Purchase {
+  id              String   @id @default(uuid())
+  purchasedAt     DateTime @default(now())
+  amountOfTickets Int
+  paymentMethod   String
+  userId          String
+  user            User     @relation(fields: [userId], references: [id])
+
+  @@map("purchases")
+}
+
+model Ticket {
+
+  id            String @id @default(uuid())
+  activeTickets Int
+  usedTickets   Int
+  userId        String @unique
+  user          User   @relation(fields: [userId], references: [id])
+
+  @@map("tickets")
+}
+
+//todo can we log whenn activeTickets and usedTickets are updated
