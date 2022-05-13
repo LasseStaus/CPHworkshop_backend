@@ -15,10 +15,10 @@ export class EditUserPasswordDto {
   @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
     message: 'password too weak'
   })
-  password: string
+  passwordNew: string
 
   @IsString()
   @Length(8, 50)
-  @MatchExact(EditUserPasswordDto, (s) => s.password)
-  passwordConfirm?: string
+  @MatchExact(EditUserPasswordDto, (s) => s.passwordNew)
+  passwordNewConfirm?: string
 }

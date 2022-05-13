@@ -53,7 +53,7 @@ export class UserService {
 
     // new passwords
     try {
-      const newHash = await argon.hash(dto.password, { ...hashConfig })
+      const newHash = await argon.hash(dto.passwordNew, { ...hashConfig })
       await this.prismaservice.user.update({
         where: {
           id: userId
