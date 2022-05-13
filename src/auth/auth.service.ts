@@ -15,7 +15,7 @@ export class AuthService {
     private prismaService: PrismaService,
     private jwtService: JwtService,
     private configService: ConfigService
-  ) {}
+  ) { }
 
   // #####################################
 
@@ -35,6 +35,8 @@ export class AuthService {
 
       // create tokens
       const tokens = await this.signTokens(user.id, user.email)
+      console.log(tokens);
+
 
       // update refresh token of user
       await this.updateRefreshTokenHash(user.id, tokens.refresh_token)
@@ -84,6 +86,9 @@ export class AuthService {
 
   async logout(userId: string) {
     // delete refresh hash
+    console.log("Logout BACKEND service");
+    console.log(userId);
+
     await this.prismaService.user.updateMany({
       where: {
         id: userId,
