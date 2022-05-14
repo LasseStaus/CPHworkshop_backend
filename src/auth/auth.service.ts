@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from '@nestjs/common'
+import { BadRequestException, ForbiddenException, HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime'
@@ -48,18 +48,19 @@ export class AuthService {
 
         if ((err.code = 'P2002')) {
           // prisma error code for dublicate field
-          throw new ForbiddenException('BE - Credentials taken')
+          throw new ForbiddenException('Credentials taken')
         }
 
-        console.log('BE log - Signup - Prisma Error', err)
+        throw new Error('Something went wrong, try agian later, Prisma')
       }
-      console.log('BE log - Signup - Regular rerror', err)
+      throw new Error('Something went wrong, try agian later')
     }
   }
 
   // #####################################
 
   async signin(dto: LoginDto) {
+
     const user = await this.prismaService.user.findUnique({
       where: {
         email: dto.email
@@ -67,13 +68,13 @@ export class AuthService {
     })
 
     // check if user exists
-    if (!user) throw new ForbiddenException('BE - Credentials Incorret')
+    if (!user) throw new ForbiddenException('Credentials Incorret')
 
     // check if password matches
     const pwMatches = await argon.verify(user.hash, dto.password, {
       ...hashConfig
     })
-    if (!pwMatches) throw new ForbiddenException('BE - credentials incorrect')
+    if (!pwMatches) throw new ForbiddenException('Credentials Incorrect')
 
     // create tokens
     const tokens = await this.signTokens(user.id, user.email)
@@ -85,21 +86,23 @@ export class AuthService {
   // #####################################
 
   async logout(userId: string) {
-    // delete refresh hash
-    console.log("Logout BACKEND service");
-    console.log(userId);
 
-    await this.prismaService.user.updateMany({
-      where: {
-        id: userId,
-        hashedRt: {
-          not: null
+    // delete refresh hash
+    try {
+      await this.prismaService.user.updateMany({
+        where: {
+          id: userId,
+          hashedRt: {
+            not: null
+          }
+        },
+        data: {
+          hashedRt: null
         }
-      },
-      data: {
-        hashedRt: null
-      }
-    })
+      })
+    } catch (err) {
+      throw new Error('Something went wrong, try agian later')
+    }
   }
 
   // #####################################
@@ -114,13 +117,13 @@ export class AuthService {
 
     // guard condition
     if (!user || !user.hashedRt)
-      throw new ForbiddenException('BE - Acces Denied - no user')
+      throw new ForbiddenException('Access Denied')
 
     // compare hash of the refresh tokens
     const rtMathces = await argon.verify(user.hashedRt, rt, { ...hashConfig })
     if (!rtMathces)
       throw new ForbiddenException(
-        'BE - Acces denied - refresh tokens does not match'
+        'Access denied - refresh tokens does not match'
       )
 
     // generate new tokens

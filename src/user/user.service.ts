@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from '@nestjs/common'
+import { ForbiddenException, HttpException, Injectable } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
 import { EditUserDto } from './dto'
 import { EditUserPasswordDto } from './dto/edit-user-password.dto'
@@ -20,16 +20,22 @@ export class UserService {
   }
 
   async editUser(userId: string, dto: EditUserDto) {
-    const user = await this.prismaservice.user.update({
-      where: {
-        id: userId
-      },
-      data: {
-        ...dto
-      }
-    })
 
-    return user
+    try {
+      const user = await this.prismaservice.user.update({
+        where: {
+          id: userId
+        },
+        data: {
+          ...dto
+        }
+      })
+
+      return user
+    }
+    catch (err) {
+      throw new Error('Password update failed')
+    }
   }
 
   async editUserPassword(userId: string, dto: EditUserPasswordDto) {
@@ -42,14 +48,14 @@ export class UserService {
 
     // check for user
     if (!user) {
-      throw new ForbiddenException('BE - user does not exist')
+      throw new ForbiddenException('Something went wrong, try agian later')
     }
 
     // compare passwords
     const pwMatches = await argon.verify(user.hash, dto.passwordCurrent, {
       ...hashConfig
     })
-    if (!pwMatches) throw new ForbiddenException('BE - current password does not match user password')
+    if (!pwMatches) throw new ForbiddenException('Current password does not match password of profile, try again')
 
     // new passwords
     try {
@@ -62,9 +68,9 @@ export class UserService {
           hash: newHash
         }
       })
-      return { message: 'BE - password hash updated successfully' }
+      return { message: 'Password updated successfully' }
     } catch (err) {
-      return { message: 'BE - BE - password hash NOT updated', error: err }
+      throw new Error('Something went wrong, try agian later')
     }
   }
 }
