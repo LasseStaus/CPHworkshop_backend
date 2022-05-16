@@ -1,4 +1,10 @@
-import { BadRequestException, ForbiddenException, HttpException, HttpStatus, Injectable } from '@nestjs/common'
+import {
+  BadRequestException,
+  ForbiddenException,
+  HttpException,
+  HttpStatus,
+  Injectable
+} from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime'
@@ -15,7 +21,7 @@ export class AuthService {
     private prismaService: PrismaService,
     private jwtService: JwtService,
     private configService: ConfigService
-  ) { }
+  ) {}
 
   // #####################################
 
@@ -35,8 +41,7 @@ export class AuthService {
 
       // create tokens
       const tokens = await this.signTokens(user.id, user.email)
-      console.log(tokens);
-
+      console.log(tokens)
 
       // update refresh token of user
       await this.updateRefreshTokenHash(user.id, tokens.refresh_token)
@@ -60,7 +65,6 @@ export class AuthService {
   // #####################################
 
   async signin(dto: LoginDto) {
-
     const user = await this.prismaService.user.findUnique({
       where: {
         email: dto.email
@@ -86,7 +90,6 @@ export class AuthService {
   // #####################################
 
   async logout(userId: string) {
-
     // delete refresh hash
     try {
       await this.prismaService.user.updateMany({
@@ -116,8 +119,7 @@ export class AuthService {
     })
 
     // guard condition
-    if (!user || !user.hashedRt)
-      throw new ForbiddenException('Access Denied')
+    if (!user || !user.hashedRt) throw new ForbiddenException('Access Denied')
 
     // compare hash of the refresh tokens
     const rtMathces = await argon.verify(user.hashedRt, rt, { ...hashConfig })

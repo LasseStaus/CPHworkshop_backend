@@ -7,7 +7,7 @@ import { hashConfig } from 'src/auth/helpers/hashconfig'
 
 @Injectable()
 export class UserService {
-  constructor(private prismaservice: PrismaService) { }
+  constructor(private prismaservice: PrismaService) {}
 
   async getUser(userId: string) {
     const user = await this.prismaservice.user.findUnique({
@@ -20,7 +20,6 @@ export class UserService {
   }
 
   async editUser(userId: string, dto: EditUserDto) {
-
     try {
       const user = await this.prismaservice.user.update({
         where: {
@@ -32,19 +31,17 @@ export class UserService {
       })
 
       return user
-    }
-    catch (err) {
+    } catch (err) {
       throw new Error('Password update failed')
     }
   }
 
   async editUserPassword(userId: string, dto: EditUserPasswordDto) {
-
     const user = await this.prismaservice.user.findUnique({
       where: {
         id: userId
-      },
-    });
+      }
+    })
 
     // check for user
     if (!user) {
@@ -55,7 +52,10 @@ export class UserService {
     const pwMatches = await argon.verify(user.hash, dto.passwordCurrent, {
       ...hashConfig
     })
-    if (!pwMatches) throw new ForbiddenException('Current password does not match password of profile, try again')
+    if (!pwMatches)
+      throw new ForbiddenException(
+        'Current password does not match password of profile, try again'
+      )
 
     // new passwords
     try {
