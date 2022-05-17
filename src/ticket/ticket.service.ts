@@ -8,6 +8,27 @@ export class TicketService {
 
     constructor(private prismaservice: PrismaService) { }
 
+    async getPurchases(userId: string) {
+        const purchases = await this.prismaservice.purchase.findMany({
+            where: {
+                userId: userId
+            }
+        })
+        console.log(purchases);
+
+        return purchases
+    }
+
+
+    async getTickets(userId: string) {
+        const tickets = await this.prismaservice.ticket.findUnique({
+            where: {
+                userId: userId
+            }
+        })
+        return tickets
+    }
+
     async purchaseTicket(userId: string, dto: TicketDto) {
 
         try {
@@ -30,7 +51,9 @@ export class TicketService {
                 }
             })
 
-            await this.prismaservice.$transaction([createTicketPurchase, updateTicket])
+            console.log("vi er her 2");
+
+            return await this.prismaservice.$transaction([createTicketPurchase, updateTicket])
 
         } catch (err) {
             throw new Error('Something went wrong, try agian later')
