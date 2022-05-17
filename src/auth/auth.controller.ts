@@ -16,7 +16,7 @@ import { Tokens } from './types'
 export class AuthController {
   // Instansiate the auth service using dependency injection
   // private syntax allows us to both declare and initialize the AuthService immediately in the same
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService) {}
 
   @PublicPath()
   // 201 status code pr default
@@ -38,7 +38,7 @@ export class AuthController {
   @Post('logout')
   @HttpCode(HttpStatus.OK)
   logout(@GetUserId() userId: string) {
-    console.log("Logout BACKEND controller");
+    console.log('Logout BACKEND controller')
     return this.authService.logout(userId)
   }
 

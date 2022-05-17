@@ -39,6 +39,16 @@ export class AuthService {
         }
       })
 
+      const ticket = await this.prismaService.ticket.create({
+        data: {
+          activeTickets: 0,
+          usedTickets: 0,
+          userId: user.id
+        }
+      })
+      const ticketlog = ticket
+      console.log(ticketlog)
+
       // create tokens
       const tokens = await this.signTokens(user.id, user.email)
       console.log(tokens)

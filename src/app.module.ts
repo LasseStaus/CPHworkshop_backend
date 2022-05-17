@@ -5,6 +5,9 @@ import { UserModule } from './user/user.module'
 import { PrismaModule } from './prisma/prisma.module'
 import { APP_GUARD } from '@nestjs/core'
 import { AtGuard } from './auth/guard'
+import { BookingController } from './booking/booking.controller'
+import { BookingService } from './booking/booking.service'
+import { BookingModule } from './booking/booking.module'
 
 @Module({
   imports: [
@@ -14,14 +17,17 @@ import { AtGuard } from './auth/guard'
     }),
     AuthModule,
     UserModule,
-    PrismaModule
+    PrismaModule,
+    BookingModule
   ],
   providers: [
     {
       // Declare the global guard of the application
       provide: APP_GUARD,
       useClass: AtGuard
-    }
-  ]
+    },
+    BookingService
+  ],
+  controllers: [BookingController]
 })
 export class AppModule {}

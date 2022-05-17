@@ -7,6 +7,7 @@ import {
   MaxLength,
   MinLength
 } from 'class-validator'
+import { isStringObject } from 'util/types'
 import { MatchExact } from '../decorator/password-match.decorator'
 
 export class LoginDto {
@@ -52,4 +53,8 @@ export class SignupDto {
   @Length(8, 50)
   @MatchExact(SignupDto, (s) => s.password)
   passwordConfirm: string
+}
+
+export type BookingDTO = {
+  bookingArray: object[]
 }
