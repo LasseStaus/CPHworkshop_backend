@@ -3,6 +3,7 @@ import { Booking, PrismaPromise } from '@prisma/client'
 import { single } from 'rxjs'
 import { BookingDTO } from 'src/auth/dto'
 import { PrismaService } from '../prisma/prisma.service'
+import { updateBooking } from './dto/booking.dto'
 
 @Injectable()
 export class BookingService {
@@ -138,6 +139,27 @@ export class BookingService {
       console.log('Error in getUserBookings', err)
     }
   }
+
+  async updateBooking(dto: updateBooking) {
+
+    console.log("I backend", dto);
+
+    try {
+      const updateBooking = this.prismaService.booking.update({
+        where: {
+          id: dto.id
+        },
+        data: {
+          iLOQKey: dto.iLOQKey
+        }
+      })
+      console.log('UPDATE booking service', updateBooking)
+      return updateBooking
+    } catch (err) {
+      console.log('Error in update booking', err)
+    }
+  }
+
   async deleteBooking(userId: string, bookingId: string) {
     console.log(bookingId, 'in service')
 
@@ -152,5 +174,23 @@ export class BookingService {
       console.log('Error in getUserBookings', err)
     }
   }
+
+  async getAllUserBookings() {
+
+    try {
+      const allUserBookings = await this.prismaService.booking.findMany({
+        include: {
+          user: true, // Return all fields
+        },
+        orderBy: { bookedFor: 'desc' }
+      })
+
+      console.log('get user bookings service', allUserBookings)
+      return allUserBookings
+    } catch (err) {
+      console.log('Error in getUserBookings', err)
+    }
+  }
+
 }
 /* return  await this.prismaservice.$transaction([createBooking, updateTickets]) */

@@ -4,3 +4,8 @@ export type deleteBookingDTO = {
   bookedFor: Date
   userId: string
 }
+
+export type updateBooking = {
+  id: string
+  iLOQKey: string
+}

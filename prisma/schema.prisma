@@ -37,6 +37,7 @@ model Booking {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   bookedFor DateTime
+  iLOQKey   String?
   userId    String
   user      User     @relation(fields: [userId], references: [id])
 
