@@ -8,6 +8,9 @@ import { AtGuard } from './auth/guard'
 import { BookingController } from './booking/booking.controller'
 import { BookingService } from './booking/booking.service'
 import { BookingModule } from './booking/booking.module'
+import { TicketService } from './ticket/ticket.service';
+import { TicketModule } from './ticket/ticket.module';
+import { TicketController } from './ticket/ticket.controller';
 
 @Module({
   imports: [
@@ -18,7 +21,8 @@ import { BookingModule } from './booking/booking.module'
     AuthModule,
     UserModule,
     PrismaModule,
-    BookingModule
+    BookingModule,
+    TicketModule
   ],
   providers: [
     {
@@ -26,8 +30,9 @@ import { BookingModule } from './booking/booking.module'
       provide: APP_GUARD,
       useClass: AtGuard
     },
-    BookingService
+    BookingService,
+    TicketService,
   ],
-  controllers: [BookingController]
+  controllers: [BookingController, TicketController]
 })
-export class AppModule {}
+export class AppModule { }
