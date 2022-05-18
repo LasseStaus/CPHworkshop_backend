@@ -122,5 +122,34 @@ export class BookingService {
 
     console.log('done?', ticket)
   } */
+
+  async getUserBookings(userId: string) {
+    try {
+      const userBookings = await this.prismaService.booking.findMany({
+        where: { userId: userId },
+        take: 3,
+        orderBy: { bookedFor: 'desc' }
+      })
+
+      console.log('get user bookings service', userBookings)
+      return userBookings
+    } catch (err) {
+      console.log('Error in getUserBookings', err)
+    }
+  }
+  async deleteBooking(userId: string, bookingId: string) {
+    console.log(bookingId, 'in service')
+
+    try {
+      const deleteBooking = await this.prismaService.booking.delete({
+        where: { id: bookingId }
+      })
+
+      console.log('booking should be deleted', deleteBooking)
+      return deleteBooking
+    } catch (err) {
+      console.log('Error in getUserBookings', err)
+    }
+  }
 }
 /* return  await this.prismaservice.$transaction([createBooking, updateTickets]) */
