@@ -46,14 +46,13 @@ export class AuthService {
           userId: user.id
         }
       })
-      const ticketlog = ticket
-      console.log(ticketlog)
 
       // create tokens
       const tokens = await this.signTokens(user.id, user.email)
       console.log(tokens)
 
       // update refresh token of user
+
       await this.updateRefreshTokenHash(user.id, tokens.refresh_token)
 
       return tokens
@@ -81,6 +80,7 @@ export class AuthService {
       }
     })
 
+    console.log('in signin, dto', dto.email)
     // check if user exists
     if (!user) throw new ForbiddenException('Credentials Incorret')
 

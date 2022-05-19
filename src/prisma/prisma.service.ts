@@ -14,8 +14,7 @@ export class PrismaService extends PrismaClient {
         }
       },
       // Enable any of these to see prisma logs
-      // log: ['query', 'info', 'warn', 'error']
-      log: ['warn', 'error']
+      log: ['query', 'info', 'warn', 'error']
     })
   }
   cleanDb() {
