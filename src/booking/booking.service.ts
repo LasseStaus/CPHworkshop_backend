@@ -6,7 +6,7 @@ import { PrismaService } from '../prisma/prisma.service'
 
 @Injectable()
 export class BookingService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(private prismaService: PrismaService) { }
 
   async createBooking(userId: string, bookingDto: BookingDTO) {
     let amount: number
@@ -23,26 +23,27 @@ export class BookingService {
       amount + 1
     }
     try {
-      const booking = await this.prismaService.booking.createMany({
+      const createBooking = this.prismaService.booking.createMany({
         data: bookingArrayISO,
         skipDuplicates: true // Skip 'Bobo'
       })
 
       console.log('UPDATE BY THIS MANY ', bookingArrayISO.length)
 
-      const ticket = await this.prismaService.ticket.update({
+      const updateTickets = this.prismaService.ticket.update({
         where: {
           userId: userId
         },
         data: {
           activeTickets: {
-            increment: +bookingArrayISO.length
+            increment: -bookingArrayISO.length
           }
         }
       })
 
       //TODO what to return here?
-      return booking
+      await this.prismaService.$transaction([createBooking, updateTickets])
+      return createBooking
     } catch (err) {
       console.log('error in createBooking', err)
     }
