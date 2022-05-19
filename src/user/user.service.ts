@@ -13,6 +13,11 @@ export class UserService {
     const user = await this.prismaservice.user.findUnique({
       where: {
         id: userId
+      },
+      include: {
+        ticket: true,
+        purchase: true,
+        bookings: true
       }
     })
 
