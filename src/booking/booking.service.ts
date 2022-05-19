@@ -6,7 +6,7 @@ import { PrismaService } from '../prisma/prisma.service'
 
 @Injectable()
 export class BookingService {
-  constructor(private prismaService: PrismaService) { }
+  constructor(private prismaService: PrismaService) {}
 
   async createBooking(userId: string, bookingDto: BookingDTO) {
     let amount: number
