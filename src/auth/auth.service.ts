@@ -74,12 +74,13 @@ export class AuthService {
   // #####################################
 
   async signin(dto: LoginDto) {
+    console.log('inside signin service 1')
     const user = await this.prismaService.user.findUnique({
       where: {
         email: dto.email
       }
     })
-
+    console.log('inside signin service 2')
     console.log('in signin, dto', dto.email)
     // check if user exists
     if (!user) throw new ForbiddenException('Credentials Incorret')
@@ -88,6 +89,7 @@ export class AuthService {
     const pwMatches = await argon.verify(user.hash, dto.password, {
       ...hashConfig
     })
+    console.log('inside signin service 3')
     if (!pwMatches) throw new ForbiddenException('Credentials Incorrect')
 
     // create tokens

@@ -141,8 +141,7 @@ export class BookingService {
   }
 
   async updateBooking(dto: updateBooking) {
-
-    console.log("I backend", dto);
+    console.log('I backend', dto)
 
     try {
       const updateBooking = this.prismaService.booking.update({
@@ -176,11 +175,10 @@ export class BookingService {
   }
 
   async getAllUserBookings() {
-
     try {
       const allUserBookings = await this.prismaService.booking.findMany({
         include: {
-          user: true, // Return all fields
+          user: true // Return all fields
         },
         orderBy: { bookedFor: 'desc' }
       })
@@ -191,6 +189,5 @@ export class BookingService {
       console.log('Error in getUserBookings', err)
     }
   }
-
 }
 /* return  await this.prismaservice.$transaction([createBooking, updateTickets]) */

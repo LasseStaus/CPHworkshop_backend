@@ -3,7 +3,7 @@ import { PrismaService } from '../prisma/prisma.service'
 import { EditUserDto } from './dto'
 import { EditUserPasswordDto } from './dto/edit-user-password.dto'
 import * as argon from 'argon2'
-import { hashConfig } from 'src/auth/helpers/hashconfig'
+import { hashConfig } from '../auth/helpers/hashconfig'
 
 @Injectable()
 export class UserService {

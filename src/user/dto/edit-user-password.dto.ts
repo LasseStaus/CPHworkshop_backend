@@ -6,7 +6,7 @@ import {
   MaxLength,
   MinLength
 } from 'class-validator'
-import { MatchExact } from 'src/auth/decorator/password-match.decorator'
+import { MatchExact } from '../../auth/decorator/password-match.decorator'
 
 export class EditUserPasswordDto {
   @IsString()

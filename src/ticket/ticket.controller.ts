@@ -6,7 +6,7 @@ import {
   HttpStatus,
   Post
 } from '@nestjs/common'
-import { GetUserId } from 'src/auth/decorator'
+import { GetUserId } from '../auth/decorator'
 import { TicketDto } from './dto'
 import { TicketService } from './ticket.service'
 
