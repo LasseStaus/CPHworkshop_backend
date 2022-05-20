@@ -1,15 +1,19 @@
 {
   "name": "backend",
   "version": "0.0.1",
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
   "description": "",
   "author": "",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "seed:db": "yarn prisma db seed",
     "db:dev:rm": "docker compose rm db -s -f -v",
     "db:dev:up": "docker compose up db -d",
     "db:dev:clear": "docker system prune --volumes",
-    "db:dev:restart": "yarn db:dev:rm  && yarn db:dev:up && sleep 1 && yarn prisma:migration:run",
+    "db:dev:restart": "yarn db:dev:rm  && yarn db:dev:up && sleep 1 && yarn prisma:migration:run && yarn seed:db",
     "db:test:rm": "docker compose rm testdb -s -f -v",
     "db:test:up": "docker compose up testdb -d",
     "db:test:clear": "docker system prune --volumes",
