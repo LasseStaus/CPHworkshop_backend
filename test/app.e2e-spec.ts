@@ -191,12 +191,12 @@ describe('App e2e', () => {
 
     describe('Can edit user data', () => {
       it('Can NOT edit user data without access token', () => {
-        return pactum.spec().patch('/user/edit').expectStatus(401)
+        return pactum.spec().patch('/user/edit/userInfo').expectStatus(401)
       })
       it('Can NOT edit user data with invalid access token', () => {
         return pactum
           .spec()
-          .patch('/user/edit')
+          .patch('/user/edit/userInfo')
           .withHeaders({ Authorization: `Bearer ${invalidBearerToken}` })
           .withBody(editUserDto)
           .expectStatus(401)
@@ -204,7 +204,7 @@ describe('App e2e', () => {
       it('Can edit user data with valid access token', () => {
         return pactum
           .spec()
-          .patch('/user/edit')
+          .patch('/user/edit/userInfo')
           .withBody(editUserDto)
           .withHeaders({ Authorization: 'Bearer $S{user_access_token}' })
           .expectStatus(200)

@@ -26,6 +26,7 @@ model User {
   firstname   String?
   lastname    String?
   phonenumber String?
+  isAdmin     Boolean
 
   bookings Booking[]
   purchase Purchase[]

@@ -35,6 +35,7 @@ export class AuthService {
           firstname: dto.firstname,
           lastname: dto.lastname,
           phonenumber: dto.phonenumber,
+          isAdmin: false,
           hash
         }
       })
