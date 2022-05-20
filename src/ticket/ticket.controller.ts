@@ -20,6 +20,12 @@ export class TicketController {
     return this.ticketService.getTickets(id)
   }
 
+  @Get('ticketTypes') // method and path
+  getTicketTypes() {
+    // get info about the current user using costume decorator
+    return this.ticketService.getTicketTypes()
+  }
+
   @Get('purchases') // method and path
   getPurchases(@GetUserId() id: string) {
     // get info about the current user using costume decorator

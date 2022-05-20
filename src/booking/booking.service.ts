@@ -2,8 +2,9 @@ import { Injectable } from '@nestjs/common'
 import { Booking, PrismaPromise } from '@prisma/client'
 import { single } from 'rxjs'
 import { BookingDTO } from 'src/auth/dto'
+import { TicketService } from 'src/ticket/ticket.service'
 import { PrismaService } from '../prisma/prisma.service'
-import { updateBooking } from './dto/booking.dto'
+import { deleteBookingDTO, updateBooking } from './dto/booking.dto'
 
 @Injectable()
 export class BookingService {
@@ -94,16 +95,32 @@ export class BookingService {
     }
   }
 
-  async deleteBooking(userId: string, bookingId: string) {
-    console.log(bookingId, 'in service')
-
+  async deleteBooking(userId: string, booking: deleteBookingDTO) {
     try {
-      const deleteBooking = await this.prismaService.booking.delete({
-        where: { id: bookingId }
+      const deleteBooking = this.prismaService.booking.delete({
+        where: { id: booking.id }
       })
 
-      console.log('booking should be deleted', deleteBooking)
-      return deleteBooking
+      const updateTickets = this.prismaService.ticket.update({
+        where: {
+          userId: userId
+        },
+        data: {
+          activeTickets: {
+            increment: 1
+          },
+          usedTickets: {
+            decrement: 1
+          }
+        }
+      })
+
+      const data = await this.prismaService.$transaction([
+        deleteBooking,
+        updateTickets
+      ])
+
+      return data
     } catch (err) {
       console.log('Error in getUserBookings', err)
       throw new Error('Could not delete booking')
