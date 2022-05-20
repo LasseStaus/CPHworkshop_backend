@@ -66,4 +66,15 @@ model Ticket {
   @@map("tickets")
 }
 
+model TicketType {
+
+  id            String @id @default(uuid())
+  ticketType    String
+  nowPrice      Int
+  normalPrice   Int
+  ticketsAmount Int
+
+  @@map("ticketTypes")
+}
+
 //todo can we log whenn activeTickets and usedTickets are updated
