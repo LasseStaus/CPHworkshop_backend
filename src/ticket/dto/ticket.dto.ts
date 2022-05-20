@@ -1,3 +1,3 @@
-export type TicketDto = {
+export class TicketDto {
   amountOfTickets: number
 }

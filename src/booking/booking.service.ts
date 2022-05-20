@@ -153,10 +153,9 @@ export class BookingService {
           iLOQKey: dto.iLOQKey
         }
       })
-      console.log('UPDATE booking service', updateBooking)
       return updateBooking
     } catch (err) {
-      console.log('Error in update booking', err)
+      throw new Error('Something went wrong, try agian later')
     }
   }
 
