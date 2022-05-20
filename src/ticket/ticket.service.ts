@@ -27,6 +27,11 @@ export class TicketService {
     return tickets
   }
 
+  async getTicketTypes() {
+    const tickets = await this.prismaservice.ticketType.findMany({})
+    return tickets
+  }
+
   async purchaseTicket(userId: string, dto: TicketDto) {
     try {
       const createTicketPurchase = this.prismaservice.purchase.create({
@@ -48,12 +53,12 @@ export class TicketService {
         }
       })
 
-      console.log('vi er her 2')
-
-      return await this.prismaservice.$transaction([
+      const data = await this.prismaservice.$transaction([
         createTicketPurchase,
         updateTicket
       ])
+
+      return data
     } catch (err) {
       throw new Error('Something went wrong, try agian later')
     }
