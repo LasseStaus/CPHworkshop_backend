@@ -37,7 +37,7 @@ export class BookingService {
         },
         data: {
           activeTickets: {
-            increment: -bookingArrayISO.length
+            decrement: bookingArrayISO.length
           }
         }
       })

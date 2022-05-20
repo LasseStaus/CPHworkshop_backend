@@ -7,10 +7,7 @@ import { deleteBookingDTO, updateBooking } from './dto/booking.dto'
 
 @Controller('booking')
 export class BookingController {
-  constructor(
-    private bookingService: BookingService,
-    private prismaService: PrismaService
-  ) {}
+  constructor(private bookingService: BookingService) {}
 
   @Post('createBooking') // method and path
   createBooking(@GetUserId() id: string, @Body() bookingDto: BookingDTO) {
