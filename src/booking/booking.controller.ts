@@ -41,6 +41,6 @@ export class BookingController {
     console.log('controller', bookingDto)
 
     // get info about the current user using costume decorator
-    return this.bookingService.deleteBooking(id, bookingDto.id)
+    return this.bookingService.deleteBooking(id, bookingDto)
   }
 }
