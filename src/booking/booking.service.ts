@@ -168,7 +168,7 @@ export class BookingService {
 
       const updateTickets = this.prismaService.ticket.update({
         where: {
-          userId: booking.userId
+          userId: userId
         },
         data: {
           activeTickets: {
