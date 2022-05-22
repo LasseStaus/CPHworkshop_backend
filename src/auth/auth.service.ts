@@ -1,10 +1,4 @@
-import {
-  BadRequestException,
-  ForbiddenException,
-  HttpException,
-  HttpStatus,
-  Injectable
-} from '@nestjs/common'
+import { ForbiddenException, Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime'
@@ -40,7 +34,7 @@ export class AuthService {
         }
       })
 
-      const ticket = await this.prismaService.ticket.create({
+      await this.prismaService.ticket.create({
         data: {
           activeTickets: 0,
           usedTickets: 0,
@@ -97,7 +91,7 @@ export class AuthService {
     const tokens = await this.signTokens(user.id, user.email)
     await this.updateRefreshTokenHash(user.id, tokens.refresh_token)
 
-    return tokens
+    return { tokens: tokens, isAdmin: user.isAdmin }
   }
 
   // #####################################
@@ -146,7 +140,7 @@ export class AuthService {
     // update the refresh token hash
     await this.updateRefreshTokenHash(user.id, tokens.refresh_token)
 
-    return tokens
+    return { tokens: tokens, isAdmin: user.isAdmin }
   }
 
   // #####################################

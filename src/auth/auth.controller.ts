@@ -31,7 +31,7 @@ export class AuthController {
   // needs meta data to donts use AT guad
   @HttpCode(HttpStatus.OK) // 200 status code
   @Post('local/signin')
-  login(@Body() dto: LoginDto): Promise<Tokens> {
+  login(@Body() dto: LoginDto): Promise<{ tokens: Tokens; isAdmin: boolean }> {
     return this.authService.signin(dto)
   }
 
@@ -50,7 +50,7 @@ export class AuthController {
     // using costume decorators
     @GetUserId() userId: string,
     @GetUserToken('refreshToken') refreshToken: string
-  ) {
+  ): Promise<{ tokens: Tokens; isAdmin: boolean }> {
     return this.authService.refreshTokens(userId, refreshToken)
   }
 }

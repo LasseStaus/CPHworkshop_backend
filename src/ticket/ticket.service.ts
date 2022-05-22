@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
-import { domainToASCII } from 'url'
-import { TicketDto } from './dto'
+import { ticketDto } from './dto/ticket.dto'
 
 @Injectable()
 export class TicketService {
@@ -32,7 +31,9 @@ export class TicketService {
     return tickets
   }
 
-  async purchaseTicket(userId: string, dto: TicketDto) {
+  async purchaseTicket(userId: string, dto: ticketDto) {
+    console.log('purchase ticket', dto, typeof dto)
+
     try {
       const createTicketPurchase = this.prismaservice.purchase.create({
         data: {

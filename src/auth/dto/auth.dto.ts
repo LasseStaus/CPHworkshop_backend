@@ -7,7 +7,6 @@ import {
   MaxLength,
   MinLength
 } from 'class-validator'
-import { isStringObject } from 'util/types'
 import { MatchExact } from '../decorator/password-match.decorator'
 
 export class LoginDto {

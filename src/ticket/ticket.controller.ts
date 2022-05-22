@@ -7,7 +7,8 @@ import {
   Post
 } from '@nestjs/common'
 import { GetUserId } from '../auth/decorator'
-import { TicketDto } from './dto'
+import { ticketDto } from './dto/ticket.dto'
+
 import { TicketService } from './ticket.service'
 
 @Controller('ticket')
@@ -34,7 +35,10 @@ export class TicketController {
 
   @Post('purchase')
   @HttpCode(HttpStatus.OK)
-  purchaseTicket(@GetUserId() userId: string, @Body() dto: TicketDto) {
+  purchaseTicket(@GetUserId() userId: string, @Body() dto: ticketDto) {
+    console.log('in controller', userId, dto, typeof dto)
+    console.log('in controller', userId, dto, typeof dto)
+
     return this.ticketService.purchaseTicket(userId, dto)
   }
 }
