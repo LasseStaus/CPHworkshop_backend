@@ -30,14 +30,22 @@ async function seedAdmin() {
   console.log(`Seeding admin...`)
   const user = await prisma.user.create({
     data: {
-      firstname: 'astrid',
-      lastname: 'blomstrøm',
+      firstname: 'Astrid',
+      lastname: 'Alomstrøm',
       email: 'admin@admin.com',
       phonenumber: '34343434',
       isAdmin: true,
       hash: hash
     }
   })
+  await prisma.ticket.create({
+    data: {
+      activeTickets: 0,
+      usedTickets: 0,
+      userId: user.id
+    }
+  })
+
   console.log(`Created admin with email: ${user.email}`)
 }
 
