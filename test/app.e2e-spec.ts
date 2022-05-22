@@ -130,8 +130,8 @@ describe('App e2e', () => {
             .post('/auth/local/signin')
             .withBody(loginDto)
             .expectStatus(200)
-            .stores('user_access_token', 'access_token')
-            .stores('user_refresh_token', 'refresh_token')
+            .stores('user_access_token', 'tokens.access_token')
+            .stores('user_refresh_token', 'tokens.refresh_token')
             //Storing valid AT and RT for further tests in the flow
             .expectBodyContains('access_token')
             .expectBodyContains('refresh_token')

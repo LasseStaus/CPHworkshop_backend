@@ -1,7 +1,6 @@
 import { Body, Controller, Get, Patch, Post } from '@nestjs/common'
-import { GetUserId } from '../auth/decorator'
 import { BookingDTO } from 'src/auth/dto'
-import { PrismaService } from '../prisma/prisma.service'
+import { GetUserId } from '../auth/decorator'
 import { BookingService } from './booking.service'
 import { deleteBookingDTO, updateBooking } from './dto/booking.dto'
 
@@ -39,6 +38,8 @@ export class BookingController {
   @Post('deleteBooking') // method and path
   deleteBooking(@GetUserId() id: string, @Body() bookingDto: deleteBookingDTO) {
     console.log('controller', bookingDto)
+
+    console.log('delete booingDto', bookingDto)
 
     // get info about the current user using costume decorator
     return this.bookingService.deleteBooking(id, bookingDto)

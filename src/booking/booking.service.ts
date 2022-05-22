@@ -1,8 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { Booking, PrismaPromise } from '@prisma/client'
-import { single } from 'rxjs'
 import { BookingDTO } from 'src/auth/dto'
-import { TicketService } from 'src/ticket/ticket.service'
 import { PrismaService } from '../prisma/prisma.service'
 import { deleteBookingDTO, updateBooking } from './dto/booking.dto'
 
@@ -64,7 +61,7 @@ export class BookingService {
     try {
       const userBookings = await this.prismaService.booking.findMany({
         where: { userId: userId },
-        orderBy: { bookedFor: 'desc' }
+        orderBy: { bookedFor: 'asc' }
       })
 
       console.log('get user bookings service', userBookings)
