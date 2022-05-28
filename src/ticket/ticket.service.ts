@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common'
+import { TicketType } from '@prisma/client'
 import { PrismaService } from '../prisma/prisma.service'
 import { ticketDto } from './dto/ticket.dto'
 
@@ -32,16 +33,17 @@ export class TicketService {
   }
 
   async purchaseTicket(userId: string, dto: ticketDto) {
-    console.log('purchase ticket', dto, typeof dto)
-
     try {
       const createTicketPurchase = this.prismaservice.purchase.create({
         data: {
-          amountOfTickets: dto.amountOfTickets,
           paymentMethod: 'Mobilepay',
-          userId: userId
+          userId: userId,
+          typeOfTicket: dto.typeOfTicket
         }
       })
+
+      const amountOfTickets = parseInt(dto.typeOfTicket.replace('days', ''))
+      console.log('Se her', amountOfTickets, typeof amountOfTickets)
 
       const updateTicket = this.prismaservice.ticket.update({
         where: {
@@ -49,7 +51,7 @@ export class TicketService {
         },
         data: {
           activeTickets: {
-            increment: +dto.amountOfTickets
+            increment: +amountOfTickets
           }
         }
       })
@@ -61,7 +63,7 @@ export class TicketService {
 
       return data
     } catch (err) {
-      throw new Error('Something went wrong, try agian later')
+      throw new Error(err)
     }
   }
 }

@@ -6,19 +6,19 @@ const prisma = new PrismaClient()
 
 const ticketTypeData: Prisma.TicketTypeCreateInput[] = [
   {
-    ticketType: '3 days',
+    typeOfTicket: '3 days',
     ticketsAmount: 3,
     normalPrice: 570,
     nowPrice: 456
   },
   {
-    ticketType: '7 days',
+    typeOfTicket: '7 days',
     ticketsAmount: 7,
     normalPrice: 1330,
     nowPrice: 931
   },
   {
-    ticketType: '30 days',
+    typeOfTicket: '30 days',
     ticketsAmount: 30,
     normalPrice: 5700,
     nowPrice: 3705
@@ -55,7 +55,7 @@ async function seedTicketTypes() {
     const ticketType = await prisma.ticketType.create({
       data: type
     })
-    console.log(`Created ticket type with for: ${ticketType.ticketType}`)
+    console.log(`Created ticket type with: ${ticketType.typeOfTicket}`)
   }
   console.log(`Seeding finished.`)
 }
