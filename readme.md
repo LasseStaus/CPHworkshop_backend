@@ -20,7 +20,7 @@
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
-    <li><a href="#connect-to-backend">Connect to our backend repo</a></li>
+    <li><a href="#connect-to-the-frontend">Connecting to the frontend repo</a></li>
   </ol>
 </details>
 
@@ -155,7 +155,7 @@ If you do not have yarn installed, we recommend installing yarn through NPM
 
 
 
-### Connecting to our frontend
+### Connect to the frontend
 
 To create and connect with an instance of our frontend, please go to the [frontend repository](https://github.com/LasseStaus/frontend_chakra) and follow the steps in the Readme
 
