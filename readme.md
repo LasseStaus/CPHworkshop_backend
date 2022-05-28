@@ -1,6 +1,6 @@
 <a id="top"></a>
 
-# Exam-project - VærkstedetCPH Frontend 
+# Exam-project - VærkstedetCPH Backend 
 
 
 <!-- TABLE OF CONTENTS -->
