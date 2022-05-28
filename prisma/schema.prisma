@@ -46,12 +46,13 @@ model Booking {
 }
 
 model Purchase {
-  id              String   @id @default(uuid())
-  purchasedAt     DateTime @default(now())
-  amountOfTickets Int
-  paymentMethod   String
-  userId          String
-  user            User     @relation(fields: [userId], references: [id])
+  id            String     @id @default(uuid())
+  purchasedAt   DateTime   @default(now())
+  typeOfTicket  String     
+  paymentMethod String
+  userId        String
+  user          User       @relation(fields: [userId], references: [id])
+  ticketType    TicketType @relation(fields: [typeOfTicket], references: [typeOfTicket])
 
   @@map("purchases")
 }
@@ -70,10 +71,11 @@ model Ticket {
 model TicketType {
 
   id            String @id @default(uuid())
-  ticketType    String
+  typeOfTicket  String @unique
   nowPrice      Int
   normalPrice   Int
   ticketsAmount Int
+  Purchase Purchase[]
 
   @@map("ticketTypes")
 }

@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Post
 } from '@nestjs/common'
+import { TicketType } from '@prisma/client'
 import { GetUserId } from '../auth/decorator'
 import { ticketDto } from './dto/ticket.dto'
 
@@ -36,9 +37,6 @@ export class TicketController {
   @Post('purchase')
   @HttpCode(HttpStatus.OK)
   purchaseTicket(@GetUserId() userId: string, @Body() dto: ticketDto) {
-    console.log('in controller', userId, dto, typeof dto)
-    console.log('in controller', userId, dto, typeof dto)
-
     return this.ticketService.purchaseTicket(userId, dto)
   }
 }
