@@ -39,7 +39,7 @@ It is a REST api developed with next, capable of handling authentication and cru
 
 The technologies used to built this prototype are
 
-* [Nest.JS]([https://reactjs.org/](https://nestjs.com/))
+* [Nest.JS](https://nestjs.com/)
 * [TypeScript](https://www.typescriptlang.org/)
 * [Prisma](https://www.prisma.io/)
 
