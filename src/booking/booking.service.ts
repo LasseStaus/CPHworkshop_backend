@@ -141,7 +141,7 @@ export class BookingService {
         include: {
           user: true // Return all fields
         },
-        orderBy: { bookedFor: 'desc' }
+        orderBy: { bookedFor: 'asc' }
       })
       return allUserBookings
     } catch (err) {
