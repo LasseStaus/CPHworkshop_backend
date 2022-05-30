@@ -20,7 +20,9 @@ export class UserService {
         bookings: true
       }
     })
-
+    delete user.id
+    delete user.hash
+    delete user.hashedRt
     return user
   }
 
@@ -35,6 +37,9 @@ export class UserService {
         }
       })
 
+      delete user.id
+      delete user.hash
+      delete user.hashedRt
       return user
     } catch (err) {
       throw new Error('Password update failed')
