@@ -8,40 +8,28 @@ import { deleteBookingDTO, updateBooking } from './dto/booking.dto'
 export class BookingController {
   constructor(private bookingService: BookingService) {}
 
-  @Post('createBooking') // method and path
+  @Post('createBooking')
   createBooking(@GetUserId() id: string, @Body() bookingDto: BookingDTO) {
-    console.log('controller', JSON.stringify(bookingDto), id)
-
-    // get info about the current user using costume decorator
     return this.bookingService.createBooking(id, bookingDto)
   }
 
-  @Get('userBookings') // method and path
+  @Get('userBookings')
   getUserBookings(@GetUserId() id: string) {
-    // get info about the current user using costume decorator
     return this.bookingService.getUserBookings(id)
   }
 
-  @Get('allUserBookings') // method and path
+  @Get('allUserBookings')
   getAllUserBookings() {
-    // get info about the current user using costume decorator
     return this.bookingService.getAllUserBookings()
   }
 
-  @Patch('updateBooking') // method and path
+  @Patch('updateBooking')
   updateBooking(@Body() bookingDto: updateBooking) {
-    console.log('vi er her')
-
     return this.bookingService.updateBooking(bookingDto)
   }
 
-  @Post('deleteBooking') // method and path
+  @Post('deleteBooking')
   deleteBooking(@GetUserId() id: string, @Body() bookingDto: deleteBookingDTO) {
-    console.log('controller', bookingDto)
-
-    console.log('delete booingDto', bookingDto)
-
-    // get info about the current user using costume decorator
     return this.bookingService.deleteBooking(id, bookingDto)
   }
 }

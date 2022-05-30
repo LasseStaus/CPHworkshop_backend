@@ -4,12 +4,11 @@ import { EditUserDto } from './dto'
 import { EditUserPasswordDto } from './dto/edit-user-password.dto'
 import { UserService } from './user.service'
 
-@Controller('user') // decorator that can recieve requests and produce responses with prefix route 'user'
+@Controller('user')
 export class UserController {
   constructor(private userservice: UserService) {}
-  @Get('profile') // method and path
+  @Get('profile')
   getUser(@GetUserId() id: string) {
-    // get info about the current user using costume decorator
     return this.userservice.getUser(id)
   }
 
