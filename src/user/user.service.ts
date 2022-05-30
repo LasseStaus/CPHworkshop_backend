@@ -9,6 +9,8 @@ import { EditUserPasswordDto } from './dto/edit-user-password.dto'
 export class UserService {
   constructor(private prismaservice: PrismaService) {}
 
+  // #####################################
+
   async getUser(userId: string) {
     const user = await this.prismaservice.user.findUnique({
       where: {
@@ -26,6 +28,8 @@ export class UserService {
     return user
   }
 
+  // #####################################
+
   async editUser(userId: string, dto: EditUserDto) {
     try {
       const user = await this.prismaservice.user.update({
@@ -42,9 +46,11 @@ export class UserService {
       delete user.hashedRt
       return user
     } catch (err) {
-      throw new Error('Password update failed')
+      throw new Error('Something went wrong, try agian later')
     }
   }
+
+  // #####################################
 
   async editUserPassword(userId: string, dto: EditUserPasswordDto) {
     const user = await this.prismaservice.user.findUnique({

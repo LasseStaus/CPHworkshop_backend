@@ -13,16 +13,15 @@ export class AtGuard extends AuthGuard('jwt_access_token') {
   }
 
   canActivate(context: ExecutionContext) {
-    // if true, lets sign in
     const isPublic = this.reflector.getAllAndOverride('isPublic', [
       // where to look for 'isPublic'
       context.getHandler(),
       context.getClass()
     ])
 
-    if (isPublic) return true // let me sign in by bypasing the AtGuard
+    if (isPublic) return true // let me through to route by bypasing the AtGuard
 
-    // else execute the AtGuard and block
+    // else execute the AtGuard and look for access-token
     return super.canActivate(context)
   }
 }

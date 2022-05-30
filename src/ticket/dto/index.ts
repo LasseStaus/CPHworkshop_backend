@@ -1,2 +1,1 @@
-/* export * from './ticket.dto'
- */
+export * from './ticket.dto'

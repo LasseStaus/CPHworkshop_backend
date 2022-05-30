@@ -59,37 +59,3 @@ async function seedTicketTypes() {
   }
   console.log(`Seeding finished.`)
 }
-
-seedAdmin()
-  .then(seedTicketTypes)
-  .catch((e) => {
-    console.error(e)
-    process.exit(1)
-  })
-  .finally(async () => {
-    await prisma.$disconnect()
-  })
-
-/* async function createAdmin() {
-  const hash = await argon.hash('1234Admin', { ...hashConfig })
-  const user = await this.prisma.user.create({
-    data: {
-      firstname: 'astrid',
-      lastname: 'blomstrøm',
-      email: 'admin@admin.com',
-      phonenumber: '34343434',
-      hash: hash,
-      isAdmin: true
-    }
-  })
-
-  const ticket = await this.prismaService.ticket.create({
-    data: {
-      activeTickets: 0,
-      usedTickets: 0,
-      userId: user.id
-    }
-  })
-}
-
-createAdmin() */

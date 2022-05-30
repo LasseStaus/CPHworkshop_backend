@@ -12,7 +12,7 @@ type JwtPayload = {
 @Injectable() // enables dependency injections
 export class ATStrategy extends PassportStrategy(
   Strategy, // JWT strategy
-  'jwt_access_token' //this is the key name, defaults to "jwt" if nothing is written
+  'jwt_access_token' //the key
 ) {
   constructor(
     // dependency injections
@@ -30,16 +30,4 @@ export class ATStrategy extends PassportStrategy(
     // payload is the decoded object of the signed token with user info
     return payload // append the payload to the user object of the request object because of express --> req.user = payload
   }
-
-  // async validate(payload: {
-  //   // payload from token
-  //   sub: number
-  //   email: string
-  // }) {
-  //   const user = await this.prismaService.user.findUnique({
-  //     where: { id: payload.sub }
-  //   })
-  //   delete user.hash
-  //   return user
-  // }
 }

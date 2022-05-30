@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common'
-import { TicketType } from '@prisma/client'
 import { PrismaService } from '../prisma/prisma.service'
 import { ticketDto } from './dto/ticket.dto'
 
@@ -7,16 +6,18 @@ import { ticketDto } from './dto/ticket.dto'
 export class TicketService {
   constructor(private prismaservice: PrismaService) {}
 
+  // #####################################
+
   async getPurchases(userId: string) {
     const purchases = await this.prismaservice.purchase.findMany({
       where: {
         userId: userId
       }
     })
-    console.log(purchases)
-
     return purchases
   }
+
+  // #####################################
 
   async getTickets(userId: string) {
     const tickets = await this.prismaservice.ticket.findUnique({
@@ -27,10 +28,14 @@ export class TicketService {
     return tickets
   }
 
+  // #####################################
+
   async getTicketTypes() {
     const tickets = await this.prismaservice.ticketType.findMany({})
     return tickets
   }
+
+  // #####################################
 
   async purchaseTicket(userId: string, dto: ticketDto) {
     try {
@@ -42,8 +47,8 @@ export class TicketService {
         }
       })
 
+      // get amount of tickets from ticketType string
       const amountOfTickets = parseInt(dto.typeOfTicket.replace('days', ''))
-      console.log('Se her', amountOfTickets, typeof amountOfTickets)
 
       const updateTicket = this.prismaservice.ticket.update({
         where: {
