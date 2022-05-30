@@ -18,7 +18,7 @@ export const MatchExact = <T>(
       propertyName,
       options: validationOptions,
       constraints: [property],
-      validator: MatchConstraint
+      validator: MatchConstraint // costume validator
     })
   }
 }
@@ -26,14 +26,11 @@ export const MatchExact = <T>(
 @ValidatorConstraint({ name: 'Match' })
 export class MatchConstraint implements ValidatorConstraintInterface {
   validate(value: any, args: ValidationArguments) {
-    const [fn] = args.constraints
-    return fn(args.object) === value
+    const [constraintProperty] = args.constraints
+    return constraintProperty(args.object) === value // Password === PasswordConfirm
   }
 
   defaultMessage(args: ValidationArguments) {
     return 'Passwords do not match'
-
-    const [constraintProperty]: (() => any)[] = args.constraints
-    //   return `${constraintProperty} and ${args.property} does not match`
   }
 }

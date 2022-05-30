@@ -7,8 +7,11 @@ import { deleteBookingDTO, updateBooking } from './dto/booking.dto'
 export class BookingService {
   constructor(private prismaService: PrismaService) {}
 
+  // #####################################
+
   async createBooking(userId: string, bookingDto: BookingDTO) {
-    let amount: number
+    // let amount: number
+
     const bookingArrayISO = []
     for (const booking in bookingDto) {
       const singleDate = bookingDto[booking]
@@ -18,15 +21,13 @@ export class BookingService {
         bookedFor: date.toISOString()
       }
       bookingArrayISO.push(singleBookingObject)
-      amount + 1
+      // amount + 1
     }
     try {
       const createBooking = this.prismaService.booking.createMany({
         data: bookingArrayISO,
         skipDuplicates: true
       })
-
-      console.log('UPDATE BY THIS MANY ', bookingArrayISO.length)
 
       const updateTickets = this.prismaService.ticket.update({
         where: {
@@ -41,21 +42,26 @@ export class BookingService {
           }
         }
       })
+
       const bookings = await this.prismaService.$transaction([
         createBooking,
         updateTickets
       ])
 
-      const updatedBookings = await this.getUserBookings(userId)
+      const userBookings = await this.getUserBookings(userId)
+      const allUserBookings = await this.getAllUserBookings()
 
       return {
         tickets: bookings[1],
-        updatedBookings: updatedBookings
+        userBookings: userBookings,
+        allUserBookings: allUserBookings
       }
     } catch (err) {
       throw new Error('Could not create new bookings')
     }
   }
+
+  // #####################################
 
   async getUserBookings(userId: string) {
     try {
@@ -64,17 +70,15 @@ export class BookingService {
         orderBy: { bookedFor: 'asc' }
       })
 
-      console.log('get user bookings service', userBookings)
       return userBookings
     } catch (err) {
-      console.log('Error in getUserBookings', err)
       throw new Error('Could not get user bookings')
     }
   }
 
-  async updateBooking(dto: updateBooking) {
-    console.log('I backend', dto)
+  // #####################################
 
+  async updateBooking(dto: updateBooking) {
     try {
       const updateBooking = this.prismaService.booking.update({
         where: {
@@ -89,6 +93,8 @@ export class BookingService {
       throw new Error('Something went wrong, try agian later')
     }
   }
+
+  // #####################################
 
   async deleteBooking(userId: string, booking: deleteBookingDTO) {
     try {
@@ -115,12 +121,19 @@ export class BookingService {
         updateTickets
       ])
 
-      return data
+      const allUserBookings = await this.getAllUserBookings()
+
+      return {
+        deletedBooking: data[0],
+        updatedTickets: data[1],
+        allUserBookings: allUserBookings
+      }
     } catch (err) {
-      console.log('Error in getUserBookings', err)
       throw new Error('Could not delete booking')
     }
   }
+
+  // #####################################
 
   async getAllUserBookings() {
     try {
@@ -130,11 +143,8 @@ export class BookingService {
         },
         orderBy: { bookedFor: 'desc' }
       })
-
-      console.log('get user bookings service', allUserBookings)
       return allUserBookings
     } catch (err) {
-      console.log('Error in getUserBookings', err)
       throw new Error('Could not get all user bookings')
     }
   }

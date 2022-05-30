@@ -27,9 +27,8 @@ export class AuthController {
     return this.authService.signup(dto) // return the function from AuthService
   }
 
-  @PublicPath()
-  // needs meta data to donts use AT guad
-  @HttpCode(HttpStatus.OK) // 200 status code
+  @PublicPath() // escape ATGuard
+  @HttpCode(HttpStatus.OK)
   @Post('local/signin')
   login(@Body() dto: LoginDto): Promise<{ tokens: Tokens; isAdmin: boolean }> {
     return this.authService.signin(dto)

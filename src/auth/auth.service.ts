@@ -8,7 +8,7 @@ import { LoginDto, SignupDto } from './dto'
 import { hashConfig } from './helpers/hashconfig'
 import { Tokens } from './types'
 
-@Injectable() // make the service injectable (dependency injeciton pattern)
+@Injectable() // enables dependency injections
 export class AuthService {
   constructor(
     // dependency injections
@@ -47,19 +47,16 @@ export class AuthService {
       console.log(tokens)
 
       // update refresh token of user
-
       await this.updateRefreshTokenHash(user.id, tokens.refresh_token)
 
       return tokens
     } catch (err) {
+      // if error comes from prisma or not
       if (err instanceof PrismaClientKnownRequestError) {
-        // if error comes from prisma or not
-
+        // prisma error code for dublicate field
         if ((err.code = 'P2002')) {
-          // prisma error code for dublicate field
           throw new ForbiddenException('Credentials taken')
         }
-
         throw new Error('Something went wrong, try agian later, Prisma')
       }
       throw new Error('Something went wrong, try agian later')
@@ -69,14 +66,11 @@ export class AuthService {
   // #####################################
 
   async signin(dto: LoginDto) {
-    console.log('inside signin service 1')
     const user = await this.prismaService.user.findUnique({
       where: {
         email: dto.email
       }
     })
-    console.log('inside signin service 2')
-    console.log('in signin, dto', dto.email)
     // check if user exists
     if (!user) throw new ForbiddenException('Credentials Incorret')
 
@@ -84,11 +78,13 @@ export class AuthService {
     const pwMatches = await argon.verify(user.hash, dto.password, {
       ...hashConfig
     })
-    console.log('inside signin service 3')
+
     if (!pwMatches) throw new ForbiddenException('Credentials Incorrect')
 
     // create tokens
     const tokens = await this.signTokens(user.id, user.email)
+
+    // update refresh token of user
     await this.updateRefreshTokenHash(user.id, tokens.refresh_token)
 
     return { tokens: tokens, isAdmin: user.isAdmin }

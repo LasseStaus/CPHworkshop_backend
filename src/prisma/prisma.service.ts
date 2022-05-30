@@ -2,11 +2,10 @@ import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { PrismaClient } from '@prisma/client'
 
-@Injectable() //enables depency injection // implements OnModuleInit, OnModuleDestroy
+@Injectable() //enables depency injection
 export class PrismaService extends PrismaClient {
   constructor(configService: ConfigService) {
     // super will call constructor of the class that we are extending
-
     super({
       datasources: {
         db: {

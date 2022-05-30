@@ -6,31 +6,26 @@ import {
   HttpStatus,
   Post
 } from '@nestjs/common'
-import { TicketType } from '@prisma/client'
 import { GetUserId } from '../auth/decorator'
-import { ticketDto } from './dto/ticket.dto'
-
+import { ticketDto } from './dto'
 import { TicketService } from './ticket.service'
 
 @Controller('ticket')
 export class TicketController {
   constructor(private ticketService: TicketService) {}
 
-  @Get('data') // method and path
+  @Get('data')
   getTickets(@GetUserId() id: string) {
-    // get info about the current user using costume decorator
     return this.ticketService.getTickets(id)
   }
 
-  @Get('ticketTypes') // method and path
+  @Get('ticketTypes')
   getTicketTypes() {
-    // get info about the current user using costume decorator
     return this.ticketService.getTicketTypes()
   }
 
-  @Get('purchases') // method and path
+  @Get('purchases')
   getPurchases(@GetUserId() id: string) {
-    // get info about the current user using costume decorator
     return this.ticketService.getPurchases(id)
   }
 
