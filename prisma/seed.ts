@@ -59,3 +59,13 @@ async function seedTicketTypes() {
   }
   console.log(`Seeding finished.`)
 }
+
+seedAdmin()
+  .then(seedTicketTypes)
+  .catch((e) => {
+    console.error(e)
+    process.exit(1)
+  })
+  .finally(async () => {
+    await prisma.$disconnect()
+  })

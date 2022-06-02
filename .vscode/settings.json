@@ -1,4 +1,6 @@
-/* {
+{
+  "codesnap.boxShadow": "rgba(0, 0, 0, 0.55) 0px 5px 28px"
+}/* {
     "eslint.validate": [
       "javascript",
       "javascriptreact",

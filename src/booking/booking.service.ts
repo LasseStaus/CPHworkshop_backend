@@ -7,11 +7,7 @@ import { deleteBookingDTO, updateBooking } from './dto/booking.dto'
 export class BookingService {
   constructor(private prismaService: PrismaService) {}
 
-  // #####################################
-
   async createBooking(userId: string, bookingDto: BookingDTO) {
-    // let amount: number
-
     const bookingArrayISO = []
     for (const booking in bookingDto) {
       const singleDate = bookingDto[booking]
@@ -21,7 +17,6 @@ export class BookingService {
         bookedFor: date.toISOString()
       }
       bookingArrayISO.push(singleBookingObject)
-      // amount + 1
     }
     try {
       const createBooking = this.prismaService.booking.createMany({

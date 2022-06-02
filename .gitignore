@@ -40,4 +40,7 @@ lerna-debug.log*
 .env*.local
 .env*.example
 
+**/*.env
+!config/env/development.env
+!config/env/production.env
 

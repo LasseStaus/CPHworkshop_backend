@@ -1,13 +1,13 @@
 version: '3.8'
 services:
   db:
-    image: postgres:13
+    image: postgres:13 # The image the service uses
     ports: 
-      - 5434:5432
+      - 5434:5432 # External port : Internal port
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: db
+      POSTGRES_USER: postgres # Username for postgres
+      POSTGRES_PASSWORD: password #P assword for postgres
+      POSTGRES_DB: db # Database name 
     networks: 
       - db-network
   testdb:
