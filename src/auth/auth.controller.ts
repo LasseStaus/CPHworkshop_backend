@@ -18,26 +18,25 @@ export class AuthController {
   // private syntax allows us to both declare and initialize the AuthService immediately in the same
   constructor(private authService: AuthService) {}
 
-  @PublicPath()
-  // 201 status code pr default
+  @PublicPath() // escape ATGuard
   @Post('local/signup')
   @HttpCode(HttpStatus.CREATED)
+  // @body allows us to get the body of the request
   signup(@Body() dto: SignupDto): Promise<Tokens> {
-    // @body allows us to get the body of the request
-    return this.authService.signup(dto) // return the function from AuthService
+    // return the function from AuthService
+    return this.authService.signup(dto)
   }
 
   @PublicPath() // escape ATGuard
   @HttpCode(HttpStatus.OK)
   @Post('local/signin')
-  login(@Body() dto: LoginDto): Promise<{ tokens: Tokens; isAdmin: boolean }> {
+  signin(@Body() dto: LoginDto): Promise<{ tokens: Tokens; isAdmin: boolean }> {
     return this.authService.signin(dto)
   }
 
   @Post('logout')
   @HttpCode(HttpStatus.OK)
   logout(@GetUserId() userId: string) {
-    console.log('Logout BACKEND controller')
     return this.authService.logout(userId)
   }
 

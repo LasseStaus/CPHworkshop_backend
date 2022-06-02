@@ -156,7 +156,7 @@ export class AuthService {
       })
       return { message: 'BE - RT hash updated successfully' }
     } catch (err) {
-      return { message: 'BE - RT hash update failed', error: err }
+      return { message: 'BE - RT hash update failed' }
     }
   }
 

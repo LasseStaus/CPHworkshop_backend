@@ -20,14 +20,19 @@ export class ATStrategy extends PassportStrategy(
     private prismaService: PrismaService
   ) {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), // how to get the token, extract from headers
+      // how to get the token, extract from headers
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: configService.get('JWT_AT_SECRET') // from .env. Tokens are signed with the secret, the strategy needs det same secret to verify the token
+      // from .env. Tokens are signed with the secret, the strategy
+      // needs det same secret to verify the token
+      secretOrKey: configService.get('JWT_AT_SECRET')
     })
   }
 
+  // payload is the decoded object of the signed token with user info
   validate(payload: JwtPayload) {
-    // payload is the decoded object of the signed token with user info
-    return payload // append the payload to the user object of the request object because of express --> req.user = payload
+    // append the payload to the user object of the
+    // request object because of express --> req.user = payload
+    return payload
   }
 }
