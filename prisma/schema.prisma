@@ -9,11 +9,8 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-}
 
-generator erd {
-  provider = "prisma-erd-generator"
-  output   = "../ERD/erd.png"
+
 }
 
 model User {
@@ -48,7 +45,7 @@ model Booking {
 model Purchase {
   id            String     @id @default(uuid())
   purchasedAt   DateTime   @default(now())
-  typeOfTicket  String     
+  typeOfTicket  String
   paymentMethod String
   userId        String
   user          User       @relation(fields: [userId], references: [id])
@@ -70,12 +67,12 @@ model Ticket {
 
 model TicketType {
 
-  id            String @id @default(uuid())
-  typeOfTicket  String @unique
+  id            String     @id @default(uuid())
+  typeOfTicket  String     @unique
   nowPrice      Int
   normalPrice   Int
   ticketsAmount Int
-  Purchase Purchase[]
+  Purchase      Purchase[]
 
   @@map("ticketTypes")
 }

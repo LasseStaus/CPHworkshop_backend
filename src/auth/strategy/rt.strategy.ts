@@ -10,10 +10,11 @@ export class RTStrategy extends PassportStrategy(
   Strategy, // // JWT strategy
   'jwt_refresh_token' //the key
 ) {
-  constructor(config: ConfigService) {
+  constructor(configService: ConfigService) {
+    console.log(configService.get<string>('JWT_RT_SECRET'))
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), // how to get the token, extract from headers
-      secretOrKey: config.get<string>('JWT_RT_SECRET'), // // from .env. Tokens are signed with the secret, the strategy needs det same secret to verify the token
+      secretOrKey: configService.get<string>('JWT_RT_SECRET'), // // from .env. Tokens are signed with the secret, the strategy needs det same secret to verify the token
       passReqToCallback: true // returns the token
     })
   }
