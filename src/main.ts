@@ -5,7 +5,7 @@ import * as cookieParser from 'cookie-parser'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
-    logger: ['error', 'warn', 'log']
+    logger: ['error', 'warn', 'log', 'verbose']
     //   if (isProduction) {
     //     return ['log', 'warn', 'error'];
     //   }
@@ -26,6 +26,6 @@ async function bootstrap() {
     methods: ['GET, POST, PATCH, OPTIONS'],
     allowedHeaders: ['Origin, Content-type, Accept, Allow, authorization']
   })
-  await app.listen(3333)
+  await app.listen(process.env.PORT || 3333)
 }
 bootstrap()
