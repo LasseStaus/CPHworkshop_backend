@@ -177,8 +177,8 @@ export class AuthService {
     }
 
     // secrets from .env file
-    const atSecret = this.configService.get('JWT_AT_SECRET')
-    const rtSecret = this.configService.get('JWT_RT_SECRET')
+    const atSecret = 'supersecret'
+    const rtSecret = 'supersecreter'
 
     // signing the tokens
     const [at, rt] = await Promise.all([
