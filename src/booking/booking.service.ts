@@ -129,7 +129,7 @@ export class BookingService {
         allUserBookings: allUserBookings
       }
     } catch (err) {
-      throw new Error('Could not delete booking')
+      throw new Error('Could not delete the booking')
     }
   }
 
