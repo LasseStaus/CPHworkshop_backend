@@ -17,8 +17,6 @@ export class ATStrategy extends PassportStrategy(
     // dependency injections
     configService: ConfigService
   ) {
-    console.log(configService.get<string>('JWT_AT_SECRET'))
-
     super({
       // how to get the token, extract from headers
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
