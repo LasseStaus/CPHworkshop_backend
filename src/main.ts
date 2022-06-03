@@ -5,7 +5,12 @@ import * as cookieParser from 'cookie-parser'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
-    logger: ['error', 'warn']
+    logger: ['error', 'warn', 'log']
+    //   if (isProduction) {
+    //     return ['log', 'warn', 'error'];
+    //   }
+    //   return ['error', 'warn', 'log', 'verbose', 'debug'];
+    // }
   })
   app.use(cookieParser())
   app.useGlobalPipes(
