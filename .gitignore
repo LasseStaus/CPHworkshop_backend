@@ -36,11 +36,5 @@ lerna-debug.log*
 
 
 # Environment
-.env*
-.env*.local
-.env*.example
-.env*
-/prisma/.env*
-/prisma/.env
-prisma/.env*
-prisma/.env
+.env
+*.env
