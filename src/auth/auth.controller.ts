@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  ForbiddenException,
   HttpCode,
   HttpStatus,
   Post,
@@ -22,7 +23,9 @@ export class AuthController {
   @Post('local/signup')
   @HttpCode(HttpStatus.CREATED)
   // @body allows us to get the body of the request
-  signup(@Body() dto: SignupDto): Promise<Tokens> {
+  signup(
+    @Body() dto: SignupDto
+  ): Promise<{ message: string } | ForbiddenException | Error> {
     // return the function from AuthService
     return this.authService.signup(dto)
   }

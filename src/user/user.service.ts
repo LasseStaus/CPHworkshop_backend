@@ -23,6 +23,11 @@ export class UserService {
       }
     })
 
+    delete user.hash
+    delete user.hashedRt
+    delete user.isAdmin
+    delete user.createdAt
+
     return user
   }
 
@@ -39,6 +44,10 @@ export class UserService {
         }
       })
 
+      delete user.hash
+      delete user.hashedRt
+      delete user.isAdmin
+      delete user.createdAt
       return user
     } catch (err) {
       throw new Error('Something went wrong, try agian later')

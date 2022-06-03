@@ -19,7 +19,9 @@ export class AuthService {
 
   // #####################################
 
-  async signup(dto: SignupDto): Promise<Tokens> {
+  async signup(
+    dto: SignupDto
+  ): Promise<{ message: string } | ForbiddenException | Error> {
     const hash = await argon.hash(dto.password, { ...hashConfig })
 
     try {
@@ -44,12 +46,11 @@ export class AuthService {
 
       // create tokens
       const tokens = await this.signTokens(user.id, user.email)
-      console.log(tokens)
 
       // update refresh token of user
       await this.updateRefreshTokenHash(user.id, tokens.refresh_token)
 
-      return tokens
+      return { message: 'You have been signed up successfully!' }
     } catch (err) {
       // if error comes from prisma or not
       if (err instanceof PrismaClientKnownRequestError) {
@@ -175,9 +176,6 @@ export class AuthService {
       sub: userId,
       email: email
     }
-
-    console.log('sign', this.configService.get<string>('JWT_AT_SECRET'))
-    console.log('sign', this.configService.get<string>('JWT_RT_SECRET'))
 
     // secrets from .env file
     const atSecret = this.configService.get<string>('JWT_AT_SECRET')
