@@ -4,6 +4,7 @@ import { ExtractJwt } from 'passport-jwt'
 import { PrismaService } from '../../prisma/prisma.service'
 import { PassportStrategy } from '@nestjs/passport'
 import { Strategy } from 'passport-jwt'
+import configuration from 'src/config/configuration'
 
 type JwtPayload = {
   sub: string
@@ -20,6 +21,8 @@ export class ATStrategy extends PassportStrategy(
     configService: ConfigService,
     private prismaService: PrismaService
   ) {
+    console.log('1', process.env.JWT_AT_SECRET, '2', configuration)
+
     super({
       // how to get the token, extract from headers
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
