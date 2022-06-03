@@ -11,6 +11,7 @@ async function bootstrap() {
     //   }
     //   return ['error', 'warn', 'log', 'verbose', 'debug'];
     // }
+    // hej
   })
   app.use(cookieParser())
   app.useGlobalPipes(
