@@ -176,9 +176,12 @@ export class AuthService {
       email: email
     }
 
+    console.log('sign', this.configService.get<string>('JWT_AT_SECRET'))
+    console.log('sign', this.configService.get<string>('JWT_RT_SECRET'))
+
     // secrets from .env file
-    const atSecret = process.env.JWT_AT_SECERET
-    const rtSecret = process.env.JWT_RT_SECERET
+    const atSecret = this.configService.get<string>('JWT_AT_SECRET')
+    const rtSecret = this.configService.get<string>('JWT_RT_SECRET')
 
     // signing the tokens
     const [at, rt] = await Promise.all([

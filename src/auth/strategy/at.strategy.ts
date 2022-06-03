@@ -10,7 +10,7 @@ type JwtPayload = {
   sub: string
   email: string
 }
-console.log('1', process.env.JWT_AT_SECRET, '2')
+
 @Injectable() // enables dependency injections
 export class ATStrategy extends PassportStrategy(
   Strategy, // JWT strategy
@@ -18,16 +18,17 @@ export class ATStrategy extends PassportStrategy(
 ) {
   constructor(
     // dependency injections
-    configService: ConfigService,
-    private prismaService: PrismaService
+    configService: ConfigService
   ) {
+    console.log(configService.get<string>('JWT_AT_SECRET'))
+
     super({
       // how to get the token, extract from headers
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
       // from .env. Tokens are signed with the secret, the strategy
       // needs det same secret to verify the token
-      secretOrKey: process.env.JWT_AT_SECERET
+      secretOrKey: configService.get<string>('JWT_AT_SECRET')
     })
   }
 
