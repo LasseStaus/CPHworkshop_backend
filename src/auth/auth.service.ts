@@ -19,7 +19,9 @@ export class AuthService {
 
   // #####################################
 
-  async signup(dto: SignupDto): Promise<Tokens> {
+  async signup(
+    dto: SignupDto
+  ): Promise<{ message: string } | ForbiddenException | Error> {
     const hash = await argon.hash(dto.password, { ...hashConfig })
 
     try {
@@ -48,7 +50,7 @@ export class AuthService {
       // update refresh token of user
       await this.updateRefreshTokenHash(user.id, tokens.refresh_token)
 
-      return tokens
+      return { message: 'You have been signed up successfully!' }
     } catch (err) {
       // if error comes from prisma or not
       if (err instanceof PrismaClientKnownRequestError) {
