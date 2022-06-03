@@ -31,8 +31,8 @@ export class ATStrategy extends PassportStrategy(
 
   // payload is the decoded object of the signed token with user info
   validate(payload: JwtPayload) {
-    // append the payload to the user object of the
-    // request object because of express --> req.user = payload
+    // append the payload to the token object of the
+    // request object because of express --> req.token = payload
     return payload
   }
 }
