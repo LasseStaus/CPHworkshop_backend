@@ -2,8 +2,7 @@ import { ForbiddenException, Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { PassportStrategy } from '@nestjs/passport'
 import { Request } from 'express'
-import { ExtractJwt } from 'passport-jwt'
-import { Strategy } from 'passport-jwt'
+import { ExtractJwt, Strategy } from 'passport-jwt'
 import { RefreshToken } from '../types'
 
 @Injectable() // enables dependency injections
