@@ -21,8 +21,11 @@ async function bootstrap() {
       transform: true
     })
   )
+
+  console.log('Test log of API main', process.env.NEXT_PUBLIC_FRONTEND_URL)
+
   app.enableCors({
-    origin: 'http://localhost:3000' /* process.env.FRONTEND_URL, */,
+    origin: process.env.NEXT_PUBLIC_FRONTEND_URL,
     methods: ['GET, POST, PATCH, OPTIONS'],
     allowedHeaders: ['Origin, Content-type, Accept, Allow, authorization']
   })
