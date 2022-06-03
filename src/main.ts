@@ -29,6 +29,6 @@ async function bootstrap() {
     methods: ['GET, POST, PATCH, OPTIONS'],
     allowedHeaders: ['Origin, Content-type, Accept, Allow, authorization']
   })
-  await app.listen(process.env.PORT || 3333)
+  await app.listen(process.env.PORT)
 }
 bootstrap()
