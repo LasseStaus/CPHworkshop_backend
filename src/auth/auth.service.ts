@@ -44,7 +44,6 @@ export class AuthService {
 
       // create tokens
       const tokens = await this.signTokens(user.id, user.email)
-      console.log(tokens)
 
       // update refresh token of user
       await this.updateRefreshTokenHash(user.id, tokens.refresh_token)
@@ -175,9 +174,6 @@ export class AuthService {
       sub: userId,
       email: email
     }
-
-    console.log('sign', this.configService.get<string>('JWT_AT_SECRET'))
-    console.log('sign', this.configService.get<string>('JWT_RT_SECRET'))
 
     // secrets from .env file
     const atSecret = this.configService.get<string>('JWT_AT_SECRET')
