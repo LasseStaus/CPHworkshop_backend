@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config'
 import { PassportStrategy } from '@nestjs/passport'
 import { Request } from 'express'
 import { ExtractJwt } from 'passport-jwt'
-import { Strategy } from 'passport-local'
+import { Strategy } from 'passport-jwt'
 import { RefreshToken } from '../types'
 
 @Injectable() // enables dependency injections
@@ -14,7 +14,7 @@ export class RTStrategy extends PassportStrategy(
   constructor(config: ConfigService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), // how to get the token, extract from headers
-      secretOrKey: config.get<string>('JWT_RT_SECRET'), // // from .env. Tokens are signed with the secret, the strategy needs det same secret to verify the token
+      secretOrKey: 'supersecreter', // // from .env. Tokens are signed with the secret, the strategy needs det same secret to verify the token
       passReqToCallback: true // returns the token
     })
   }

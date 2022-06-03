@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config'
 import { ExtractJwt } from 'passport-jwt'
 import { PrismaService } from '../../prisma/prisma.service'
 import { PassportStrategy } from '@nestjs/passport'
-import { Strategy } from 'passport-local'
+import { Strategy } from 'passport-jwt'
 
 type JwtPayload = {
   sub: string
@@ -26,7 +26,7 @@ export class ATStrategy extends PassportStrategy(
       ignoreExpiration: false,
       // from .env. Tokens are signed with the secret, the strategy
       // needs det same secret to verify the token
-      secretOrKey: configService.get('JWT_AT_SECRET')
+      secretOrKey: 'supersecret'
     })
   }
 
