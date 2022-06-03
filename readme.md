@@ -142,11 +142,8 @@ If you do not have yarn installed, we recommend installing yarn through NPM
      yarn start:dev
      ```
      
-8. Too see e2e tests 
+8. Run run e2e tests locally 
 
-     ```sh
-     yarn db:test:restart
-     ```
      ```sh
      yarn test:e2e
      ```
