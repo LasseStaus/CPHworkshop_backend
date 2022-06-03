@@ -14,7 +14,7 @@ export class RTStrategy extends PassportStrategy(
   constructor(config: ConfigService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), // how to get the token, extract from headers
-      secretOrKey: 'supersecreter', // // from .env. Tokens are signed with the secret, the strategy needs det same secret to verify the token
+      secretOrKey: process.env.JWT_RT_SECERET, // // from .env. Tokens are signed with the secret, the strategy needs det same secret to verify the token
       passReqToCallback: true // returns the token
     })
   }

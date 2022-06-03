@@ -177,8 +177,8 @@ export class AuthService {
     }
 
     // secrets from .env file
-    const atSecret = 'supersecret'
-    const rtSecret = 'supersecreter'
+    const atSecret = process.env.JWT_AT_SECERET
+    const rtSecret = process.env.JWT_RT_SECERET
 
     // signing the tokens
     const [at, rt] = await Promise.all([

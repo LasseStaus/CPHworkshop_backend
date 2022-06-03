@@ -26,7 +26,7 @@ export class ATStrategy extends PassportStrategy(
       ignoreExpiration: false,
       // from .env. Tokens are signed with the secret, the strategy
       // needs det same secret to verify the token
-      secretOrKey: 'supersecret'
+      secretOrKey: process.env.JWT_AT_SECERET
     })
   }
 
