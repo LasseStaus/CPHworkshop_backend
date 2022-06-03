@@ -10,7 +10,7 @@ type JwtPayload = {
   sub: string
   email: string
 }
-
+console.log('1', process.env.JWT_AT_SECRET, '2')
 @Injectable() // enables dependency injections
 export class ATStrategy extends PassportStrategy(
   Strategy, // JWT strategy
@@ -21,8 +21,6 @@ export class ATStrategy extends PassportStrategy(
     configService: ConfigService,
     private prismaService: PrismaService
   ) {
-    console.log('1', process.env.JWT_AT_SECRET, '2', configuration)
-
     super({
       // how to get the token, extract from headers
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
