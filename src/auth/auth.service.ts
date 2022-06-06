@@ -66,7 +66,7 @@ export class AuthService {
 
   // #####################################
 
-  async signin(dto: LoginDto) {
+  async signin(dto: LoginDto): Promise<{ tokens: Tokens; isAdmin: boolean }> {
     const user = await this.prismaService.user.findUnique({
       where: {
         email: dto.email
@@ -167,10 +167,7 @@ export class AuthService {
     // the data we want to sign
     userId: string,
     email: string
-  ): Promise<{
-    access_token: string
-    refresh_token: string
-  }> {
+  ): Promise<Tokens> {
     // data object to sign
     const payload = {
       sub: userId,

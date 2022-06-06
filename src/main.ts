@@ -26,6 +26,7 @@ async function bootstrap() {
   app.enableCors({
     origin: process.env.NEXT_PUBLIC_FRONTEND_URL,
     methods: ['GET, POST, PATCH, OPTIONS'],
+    credentials: true,
     allowedHeaders: ['Origin, Content-type, Accept, Allow, authorization']
   })
   await app.listen(process.env.PORT)
