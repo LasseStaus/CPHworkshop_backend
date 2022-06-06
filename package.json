@@ -26,7 +26,7 @@
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "postinstall": "prisma migrate resolve --applied 20210426141759_initial-migration && npx prisma generate && yarn prisma migrate deploy && npm run build",
+    "postinstall": "prisma migrate diff && npx prisma generate && yarn prisma migrate deploy && npm run build",
     "start:prod": "node dist/src/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
