@@ -23,8 +23,15 @@ async function bootstrap() {
     })
   )
 
+  const whitelist = [process.env.NEXT_PUBLIC_FRONTEND_URL]
   app.enableCors({
-    origin: process.env.NEXT_PUBLIC_FRONTEND_URL,
+    origin: function (origin, callback) {
+      if (!origin || whitelist.indexOf(origin) !== -1) {
+        callback(null, true)
+      } else {
+        callback(new Error('Not allowed by CORS'))
+      }
+    },
     methods: ['GET, POST, PATCH, OPTIONS'],
     credentials: true,
     allowedHeaders: ['Origin, Content-type, Accept, Allow, authorization']
