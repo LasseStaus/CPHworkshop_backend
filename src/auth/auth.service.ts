@@ -188,7 +188,7 @@ export class AuthService {
 
       // refresh token
       this.jwtService.signAsync(payload, {
-        expiresIn: '15m',
+        expiresIn: '7d',
         secret: rtSecret
       })
     ])
