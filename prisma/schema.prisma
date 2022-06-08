@@ -9,8 +9,6 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-
-
 }
 
 model User {
@@ -24,7 +22,6 @@ model User {
   lastname    String?
   phonenumber String?
   isAdmin     Boolean
-
   bookings Booking[]
   purchase Purchase[]
   ticket   Ticket?
@@ -38,7 +35,6 @@ model Booking {
   iLOQKey   String?
   userId    String
   user      User     @relation(fields: [userId], references: [id])
-
   @@map("bookings")
 }
 
@@ -50,29 +46,24 @@ model Purchase {
   userId        String
   user          User       @relation(fields: [userId], references: [id])
   ticketType    TicketType @relation(fields: [typeOfTicket], references: [typeOfTicket])
-
   @@map("purchases")
 }
 
 model Ticket {
-
   id            String @id @default(uuid())
   activeTickets Int
   usedTickets   Int
   userId        String @unique
   user          User   @relation(fields: [userId], references: [id])
-
   @@map("tickets")
 }
 
 model TicketType {
-
   id            String     @id @default(uuid())
   typeOfTicket  String     @unique
   nowPrice      Int
   normalPrice   Int
   ticketsAmount Int
   Purchase      Purchase[]
-
   @@map("ticketTypes")
 }

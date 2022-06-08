@@ -163,16 +163,9 @@ export class AuthService {
 
   // #####################################
 
-  async signTokens(
-    // the data we want to sign
-    userId: string,
-    email: string
-  ): Promise<Tokens> {
+  async signTokens(userId: string, email: string): Promise<Tokens> {
     // data object to sign
-    const payload = {
-      sub: userId,
-      email: email
-    }
+    const payload = { sub: userId, email: email }
 
     // secrets from .env file
     const atSecret = this.configService.get<string>('JWT_AT_SECRET')
@@ -188,14 +181,11 @@ export class AuthService {
 
       // refresh token
       this.jwtService.signAsync(payload, {
-        expiresIn: '15m',
+        expiresIn: '7d',
         secret: rtSecret
       })
     ])
 
-    return {
-      access_token: at,
-      refresh_token: rt
-    }
+    return { access_token: at, refresh_token: rt }
   }
 }
