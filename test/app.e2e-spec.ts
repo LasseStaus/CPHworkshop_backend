@@ -40,7 +40,7 @@ describe('App e2e', () => {
     prismaService = app.get(PrismaService)
     jwtService = app.get(JwtService)
 
-    //not sure if used??
+    // cleans the database before running tests
     await prismaService.cleanDb()
     //Sets baseURL of requests for all pactum requests used in testing
     pactum.request.setBaseUrl('http://localhost:3333')
@@ -78,6 +78,7 @@ describe('App e2e', () => {
       secret: 'someRandomSecret',
       signOptions: { expiresIn: '15m' }
     })
+
     // JWT token used for both invalid Access and refresh token.
     // Is generated with a secret that is different from the .env secrets
     invalidBearerToken = await getBearerToken(1)
@@ -241,7 +242,7 @@ describe('App e2e', () => {
         .expectStatus(200)
     })
   })
-  describe('Bookings', () => {
+  /*  describe('Bookings', () => {
     it.todo('should test all bookings')
-  })
+  }) */
 })
