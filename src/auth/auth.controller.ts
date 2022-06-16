@@ -33,7 +33,7 @@ export class AuthController {
   @PublicPath() // escape ATGuard
   @HttpCode(HttpStatus.OK)
   @Post('local/signin')
-  signin(@Body() dto: LoginDto): Promise<{ tokens: Tokens; isAdmin: boolean }> {
+  signin(@Body() dto: LoginDto): Promise<Tokens> {
     return this.authService.signin(dto)
   }
 
@@ -51,7 +51,7 @@ export class AuthController {
     // using costume decorators
     @GetUserId() userId: string,
     @GetUserToken('refreshToken') refreshToken: string
-  ): Promise<{ tokens: Tokens; isAdmin: boolean }> {
+  ): Promise<Tokens> {
     return this.authService.refreshTokens(userId, refreshToken)
   }
 }

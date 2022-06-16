@@ -34,8 +34,8 @@ async function seedAdmin() {
       lastname: 'Alomstrøm',
       email: 'admin@admin.com',
       phonenumber: '34343434',
-      isAdmin: true,
-      hash: hash
+      hash: hash,
+      role: 'ADMIN'
     }
   })
   await prisma.ticket.create({

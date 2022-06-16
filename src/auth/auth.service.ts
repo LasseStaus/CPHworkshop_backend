@@ -31,7 +31,7 @@ export class AuthService {
           firstname: dto.firstname,
           lastname: dto.lastname,
           phonenumber: dto.phonenumber,
-          isAdmin: false,
+          role: 'USER',
           hash
         }
       })
@@ -45,7 +45,7 @@ export class AuthService {
       })
 
       // create tokens
-      const tokens = await this.signTokens(user.id, user.email)
+      const tokens = await this.signTokens(user.id, user.role)
 
       // update refresh token of user
       await this.updateRefreshTokenHash(user.id, tokens.refresh_token)
@@ -66,7 +66,7 @@ export class AuthService {
 
   // #####################################
 
-  async signin(dto: LoginDto): Promise<{ tokens: Tokens; isAdmin: boolean }> {
+  async signin(dto: LoginDto): Promise<Tokens> {
     const user = await this.prismaService.user.findUnique({
       where: {
         email: dto.email
@@ -83,12 +83,12 @@ export class AuthService {
     if (!pwMatches) throw new ForbiddenException('Credentials Incorrect')
 
     // create tokens
-    const tokens = await this.signTokens(user.id, user.email)
+    const tokens = await this.signTokens(user.id, user.role)
 
     // update refresh token of user
     await this.updateRefreshTokenHash(user.id, tokens.refresh_token)
 
-    return { tokens: tokens, isAdmin: user.isAdmin }
+    return tokens
   }
 
   // #####################################
@@ -133,11 +133,11 @@ export class AuthService {
       )
 
     // generate new tokens
-    const tokens = await this.signTokens(user.id, user.email)
+    const tokens = await this.signTokens(user.id, user.role)
     // update the refresh token hash
     await this.updateRefreshTokenHash(user.id, tokens.refresh_token)
 
-    return { tokens: tokens, isAdmin: user.isAdmin }
+    return tokens
   }
 
   // #####################################
@@ -163,9 +163,9 @@ export class AuthService {
 
   // #####################################
 
-  async signTokens(userId: string, email: string): Promise<Tokens> {
+  async signTokens(userId: string, role: string): Promise<Tokens> {
     // data object to sign
-    const payload = { sub: userId, email: email }
+    const payload = { sub: userId, role: role }
 
     // secrets from .env file
     const atSecret = this.configService.get<string>('JWT_AT_SECRET')

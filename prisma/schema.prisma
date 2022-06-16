@@ -11,20 +11,27 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+generator erd {
+  provider = "prisma-erd-generator"
+  output   = "../prisma/ERD.png"
+}
+
 model User {
-  id          String   @id @unique @default(uuid())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  email       String   @unique
+  id          String     @id @unique @default(uuid())
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  email       String     @unique
   hash        String
   hashedRt    String?
   firstname   String?
   lastname    String?
   phonenumber String?
-  isAdmin     Boolean
-  bookings Booking[]
-  purchase Purchase[]
-  ticket   Ticket?
+  role        Role       @default(USER)
+  bookings    Booking[]
+  purchase    Purchase[]
+  ticket      Ticket?
+
+
   @@map("users")
 }
 
@@ -35,6 +42,7 @@ model Booking {
   iLOQKey   String?
   userId    String
   user      User     @relation(fields: [userId], references: [id])
+
   @@map("bookings")
 }
 
@@ -46,6 +54,7 @@ model Purchase {
   userId        String
   user          User       @relation(fields: [userId], references: [id])
   ticketType    TicketType @relation(fields: [typeOfTicket], references: [typeOfTicket])
+
   @@map("purchases")
 }
 
@@ -55,6 +64,7 @@ model Ticket {
   usedTickets   Int
   userId        String @unique
   user          User   @relation(fields: [userId], references: [id])
+
   @@map("tickets")
 }
 
@@ -65,5 +75,11 @@ model TicketType {
   normalPrice   Int
   ticketsAmount Int
   Purchase      Purchase[]
+
   @@map("ticketTypes")
+}
+
+enum Role {
+  USER
+  ADMIN
 }

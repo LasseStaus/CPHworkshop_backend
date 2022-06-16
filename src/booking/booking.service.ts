@@ -49,7 +49,7 @@ export class BookingService {
       ])
 
       const userBookings = await this.getUserBookings(userId)
-      const allUserBookings = await this.getAllUserBookings()
+      const allUserBookings = await this.getAllBookings()
 
       return {
         tickets: bookings[1],
@@ -78,7 +78,7 @@ export class BookingService {
 
   // #####################################
 
-  async updateBooking(dto: updateBooking) {
+  async updateBookingKey(dto: updateBooking) {
     try {
       const updateBooking = this.prismaService.booking.update({
         where: {
@@ -121,7 +121,7 @@ export class BookingService {
         updateTickets
       ])
 
-      const allUserBookings = await this.getAllUserBookings()
+      const allUserBookings = await this.getAllBookings()
 
       return {
         deletedBooking: data[0],
@@ -135,7 +135,18 @@ export class BookingService {
 
   // #####################################
 
-  async getAllUserBookings() {
+  async getAllBookings() {
+    try {
+      const allUserBookings = await this.prismaService.booking.findMany({
+        orderBy: { bookedFor: 'asc' }
+      })
+      return allUserBookings
+    } catch (err) {
+      throw new Error('Could not get all user bookings')
+    }
+  }
+
+  async allBookingsWithUserInfo() {
     try {
       const allUserBookings = await this.prismaService.booking.findMany({
         include: {
