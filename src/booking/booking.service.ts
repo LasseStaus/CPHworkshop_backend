@@ -150,10 +150,16 @@ export class BookingService {
     try {
       const allUserBookings = await this.prismaService.booking.findMany({
         include: {
-          user: true // Return all fields
+          user: {
+            select: {
+              phonenumber: true,
+              email: true
+            }
+          }
         },
         orderBy: { bookedFor: 'asc' }
       })
+
       return allUserBookings
     } catch (err) {
       throw new Error('Could not get all user bookings')
